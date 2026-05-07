@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_shared_footer_menus",
+  "info": {
+    "displayName": "Footer Menu",
+    "description": "A grouped column of footer navigation links with a title"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.link"
+    }
+  }
+}

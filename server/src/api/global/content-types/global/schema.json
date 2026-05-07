@@ -33,6 +33,20 @@
       "type": "component",
       "repeatable": false,
       "component": "layout.footer"
+    },
+    "contactPhone": {
+      "type": "string"
+    },
+    "contactEmail": {
+      "type": "string"
+    },
+    "contactAddress": {
+      "type": "text"
+    },
+    "socialLinks": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.social-link"
     }
   }
 }

@@ -7,52 +7,77 @@ interface Props {
 }
 
 const {
-  data: { heading, text, image, links },
+  data: { heading, text, mediaType, image, video, textDark, links },
 } = Astro.props;
+
+const BASE_URL = (import.meta.env.STRAPI_BASE_URL ?? "http://localhost:1337").replace(/\/api$/, "");
+
+function getStrapiUrl(url: string | null | undefined): string | undefined {
+  if (!url) return undefined;
+  if (url.startsWith("data:") || url.startsWith("http") || url.startsWith("//")) return url;
+  return `${BASE_URL}${url}`;
+}
+
+const isVideo = (mediaType ?? "image") === "video" && !!video?.url;
+const textColorClass = textDark ? "text-secondary" : "text-white";
+const videoPoster = image?.url ? getStrapiUrl(image.url) : undefined;
 ---
 
-<section class="overflow-hidden bg-surface">
-  <div class="mx-auto max-w-6xl px-6 py-20 lg:py-28">
-    <div class="flex flex-col items-center gap-12 lg:flex-row lg:gap-16">
-      <div class="flex-1 text-center lg:text-left">
-        <h1 class="text-4xl font-bold tracking-tight text-secondary sm:text-5xl lg:text-6xl font-heading leading-[1.1]">
+<section
+  class="relative h-[80vh] min-h-[500px] overflow-hidden"
+  aria-label={heading}
+>
+  {isVideo && (
+    <video
+      class="absolute inset-0 h-full w-full object-cover"
+      autoplay={true}
+      loop={true}
+      muted={true}
+      playsinline={true}
+      poster={videoPoster}
+      aria-hidden="true"
+    >
+      <source src={getStrapiUrl(video!.url)} type={video!.mime ?? "video/mp4"} />
+    </video>
+  )}
+  {!isVideo && image?.url && (
+    <StrapiImage
+      src={image.url}
+      alt=""
+      width={1920}
+      height={1080}
+      class="absolute inset-0 h-full w-full object-cover object-center"
+    />
+  )}
+
+  <div class="absolute inset-0 bg-black/40" aria-hidden="true" />
+
+  <div class={`absolute inset-0 z-10 flex items-center ${textColorClass}`}>
+    <div class="container mx-auto px-6 md:px-12">
+      <div class="max-w-[700px]">
+        <h1 class="font-heading font-bold text-3xl md:text-5xl xl:text-6xl leading-tight">
           {heading}
         </h1>
-        <p class="mt-6 text-lg leading-relaxed text-muted max-w-lg mx-auto lg:mx-0">
-          {text}
-        </p>
-        {links && (
-          <div class="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
-            {links.map((link) => {
-              const isPrimary = link.type === "PRIMARY";
-              return (
-                <a
-                  class={`inline-flex items-center rounded-button px-5 py-2.5 text-sm font-semibold transition ${
-                    isPrimary
-                      ? 'bg-primary-600 text-white shadow-sm hover:bg-primary-700'
-                      : 'border border-border bg-surface-raised text-secondary hover:border-border-hover hover:bg-surface-alt'
-                  }`}
-                  href={link.href}
-                  target={link.isExternal ? "_blank" : "_self"}
-                >
-                  {link.label}
-                </a>
-              );
-            })}
+        {text && (
+          <p class="mt-6 text-lg md:text-xl font-normal leading-relaxed">
+            {text}
+          </p>
+        )}
+        {links && links.length > 0 && (
+          <div class="mt-8 flex flex-wrap gap-4">
+            {links.map((link) => (
+              <a
+                class={`button ${link.type === "SECONDARY" ? "button-secondary" : "button-primary"}`}
+                href={link.href}
+                target={link.isExternal ? "_blank" : "_self"}
+                rel={link.isExternal ? "noopener noreferrer" : undefined}
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
         )}
       </div>
-      {image && (
-        <div class="flex-1">
-          <StrapiImage
-            src={image.url}
-            alt={image.alternativeText}
-            height={600}
-            width={800}
-            class="w-full rounded-2xl object-cover shadow-lg"
-          />
-        </div>
-      )}
     </div>
   </div>
 </section>

@@ -11,15 +11,20 @@
       "repeatable": false,
       "component": "shared.logo"
     },
-    "navItems": {
+    "topNav": {
       "type": "component",
       "repeatable": true,
       "component": "shared.link"
     },
-    "cta": {
+    "navItems": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.nav-item"
+    },
+    "ctaGroup": {
       "type": "component",
       "repeatable": false,
-      "component": "shared.link"
+      "component": "shared.nav-item"
     }
   }
 }

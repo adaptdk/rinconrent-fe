@@ -10,8 +10,15 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.google(),
-      name: "Roboto",
-      cssVariable: "--font-roboto",
+      name: "Cormorant Garamond",
+      cssVariable: "--font-cormorant",
+      weights: [400, 500, 600, 700],
+      styles: ["normal", "italic"],
+    },
+    {
+      provider: fontProviders.google(),
+      name: "Proza Libre",
+      cssVariable: "--font-proza",
       weights: [400, 500, 600, 700],
       styles: ["normal"],
     },

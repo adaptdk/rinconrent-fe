@@ -1,108 +1,148 @@
 ---
-import type { GlobalPageHeader } from "../utils/types";
+import type { GlobalPageHeader, NavItem } from "../utils/types";
 import StrapiImage from "./StrapiImage.astro";
+import NavItem from "./NavItem.astro";
+import Topbar from "./Topbar.astro";
 
 interface Props {
   data: GlobalPageHeader;
 }
 
-const {
-  data: { logo, navItems, cta },
-} = Astro.props;
-
+const { data: { logo, topNav, navItems, ctaGroup } } = Astro.props;
 const currentPath = Astro.url.pathname;
+
+const allItems: import("../utils/types").NavItem[] = [
+  ...navItems,
+  ...(ctaGroup ? [ctaGroup] : []),
+];
+const itemsWithChildren = allItems.filter(i => i.children && i.children.length > 0);
+
+function submenuId(label: string) {
+  return label.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+}
 ---
 
-<header class="sticky top-0 z-40 border-b border-border bg-surface-raised/80 backdrop-blur-lg">
-  <nav class="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-    <a class="flex items-center gap-2 font-heading text-lg font-bold tracking-tight" href={logo.logoLink}>
-      <StrapiImage src={logo.image.url} alt={logo.image.alternativeText} height={36} width={36} class="rounded-lg" />
+<Topbar topNav={topNav ?? []} />
+
+<header class="sticky top-0 z-[998] bg-sand-white border-b border-grey-border shadow-md">
+  <div class="container mx-auto flex items-center justify-between py-3 lg:py-5 px-4">
+
+    <!-- Logo -->
+    <a href={logo.logoLink} aria-label={logo.logoText || "Home"} class="block w-[110px] lg:w-[150px] shrink-0">
+      <StrapiImage
+        src={logo.image.url}
+        alt={logo.image.alternativeText || logo.logoText}
+        width={150}
+        height={40}
+        class="w-full h-auto"
+      />
     </a>
 
-    <button class="lg:hidden rounded-lg p-2 text-muted hover:text-secondary transition" id="burger-button" aria-label="Toggle menu">
-      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <!-- Desktop nav -->
+    <nav class="hidden lg:flex items-center gap-2 xl:gap-4" aria-label="Main navigation">
+      {navItems.map(item => (
+        <NavItem item={item} currentPath={currentPath} />
+      ))}
+    </nav>
+
+    <!-- Desktop CTA group -->
+    {ctaGroup && (
+      <div class="hidden lg:block">
+        <NavItem item={ctaGroup} currentPath={currentPath} isBold />
+      </div>
+    )}
+
+    <!-- Mobile hamburger -->
+    <button
+      id="mobile-toggle"
+      class="lg:hidden p-2 -mr-2 text-dark-grey hover:text-dark-blue transition-colors duration-200"
+      aria-label="Open navigation menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <svg id="icon-open" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
       </svg>
+      <svg id="icon-close" class="hidden w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
     </button>
+  </div>
 
-    <ul class="hidden lg:flex items-center gap-1">
-      {navItems.map((item) => (
-        <li>
-          <a
-            class={`rounded-lg px-3 py-2 text-sm font-medium transition ${
-              currentPath === item.href
-                ? 'bg-primary-50 text-primary-700'
-                : 'text-muted hover:text-secondary hover:bg-surface-alt'
-            }`}
-            href={item.href}
-            target={item.isExternal ? "_blank" : "_self"}
-          >
-            {item.label}
-          </a>
-        </li>
+  <!-- Mobile main menu -->
+  <div
+    id="mobile-menu"
+    class="hidden lg:hidden border-t border-grey-border bg-sand-white px-4 pb-6"
+    aria-label="Mobile navigation"
+  >
+    <nav class="mt-1">
+      {navItems.map(item => (
+        <NavItem item={item} currentPath={currentPath} mobileMode />
       ))}
-    </ul>
+      {ctaGroup && (
+        <NavItem item={ctaGroup} currentPath={currentPath} isBold mobileMode />
+      )}
+    </nav>
 
-    {cta && (
-      <a
-        class="hidden lg:inline-flex items-center rounded-button bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700 transition"
-        href={cta.href}
-        target={cta.isExternal ? "_blank" : "_self"}
-      >
-        {cta.label}
-      </a>
-    )}
-  </nav>
-
-  <!-- Mobile menu -->
-  <div class="navbar-menu fixed inset-0 z-50 hidden" id="navbar-menu">
-    <div class="navbar-backdrop fixed inset-0 bg-black/20 backdrop-blur-sm"></div>
-    <nav class="relative ml-auto flex h-full w-80 max-w-[85vw] flex-col bg-surface-raised p-6 shadow-xl">
-      <div class="mb-8 flex items-center justify-between">
-        <a class="flex items-center gap-2 font-heading text-lg font-bold" href={logo.logoLink}>
-          <StrapiImage src={logo.image.url} alt={logo.image.alternativeText} height={36} width={36} class="rounded-lg" />
-        </a>
-        <button class="navbar-close rounded-lg p-2 text-muted hover:text-secondary transition" aria-label="Close menu">
-          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-      <ul class="flex-1 space-y-1">
-        {navItems.map((item) => (
+    {(topNav ?? []).length > 0 && (
+      <ul class="mt-5 pt-4 border-t border-grey-border space-y-1">
+        {topNav.map(link => (
           <li>
             <a
-              class={`block rounded-lg px-4 py-2.5 text-sm font-medium transition ${
-                currentPath === item.href
-                  ? 'bg-primary-50 text-primary-700'
-                  : 'text-muted hover:bg-surface-alt hover:text-secondary'
-              }`}
-              href={item.href}
-              target={item.isExternal ? "_blank" : "_self"}
+              href={link.href}
+              class="block py-1 text-body-s text-grey-disabled hover:text-dark-blue transition-colors duration-200"
+              target={link.isExternal ? "_blank" : "_self"}
+              rel={link.isExternal ? "noopener noreferrer" : undefined}
             >
-              {item.label}
+              {link.label}
             </a>
           </li>
         ))}
       </ul>
-      {cta && (
-        <a
-          class="mt-6 block rounded-button bg-primary-600 px-4 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-primary-700 transition"
-          href={cta.href}
-          target={cta.isExternal ? "_blank" : "_self"}
-        >{cta.label}</a>
-      )}
-    </nav>
+    )}
   </div>
+
+  <!-- Mobile submenu overlays (slide in from right) -->
+  {itemsWithChildren.map(item => (
+    <div
+      id={`submenu-${submenuId(item.label)}`}
+      class="header__mobile-overlay"
+      aria-hidden="true"
+      aria-label={`${item.label} submenu`}
+    >
+      <!-- Back button header -->
+      <div class="flex items-center border-b border-grey-border px-4 py-3">
+        <button
+          class="flex items-center gap-2 font-semibold text-dark-grey hover:text-dark-blue transition-colors duration-200"
+          data-submenu-close
+          aria-label={`Back to main menu`}
+        >
+          <svg class="w-5 h-5 rotate-90 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+          {item.label}
+        </button>
+      </div>
+
+      <!-- Submenu links -->
+      <ul class="px-4 py-2">
+        {item.children!.map(child => (
+          <li class="border-b border-grey-border last:border-0">
+            <a
+              href={child.href}
+              class="block py-3 text-dark-grey hover:text-dark-blue transition-colors duration-200"
+              target={child.isExternal ? "_blank" : "_self"}
+              rel={child.isExternal ? "noopener noreferrer" : undefined}
+            >
+              {child.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
 </header>
 
 <script>
-  const burgerButton = document.getElementById('burger-button') as HTMLButtonElement;
-  const navbarMenu = document.getElementById('navbar-menu') as HTMLDivElement;
-  const closeButton = document.querySelector('.navbar-close') as HTMLButtonElement;
-  const backdrop = document.querySelector('.navbar-backdrop') as HTMLDivElement;
-
-  burgerButton.addEventListener('click', () => navbarMenu.classList.toggle('hidden'));
-  closeButton.addEventListener('click', () => navbarMenu.classList.add('hidden'));
-  backdrop.addEventListener('click', () => navbarMenu.classList.add('hidden'));
+  import "../scripts/header";
 </script>

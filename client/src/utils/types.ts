@@ -20,16 +20,48 @@ export interface Link {
   type?: "PRIMARY" | "SECONDARY";
 }
 
+export interface PageHeaderProps {
+  hideHeader?: boolean;
+  headerType?: "text" | "image" | "video";
+  headerSize?: "small" | "medium";
+  horizontalLayout?: boolean;
+  pretitle?: string;
+  title?: string;
+  subtitle?: string;
+  image?: Image | null;
+  video?: { url: string; alternativeText?: string | null; mime?: string } | null;
+}
+
+export interface NavItem {
+  label: string;
+  href?: string;
+  isExternal?: boolean;
+  children?: Link[];
+}
+
 export interface GlobalPageHeader {
   logo: Logo;
-  navItems: Link[];
-  cta: Link;
+  topNav: Link[];
+  navItems: NavItem[];
+  ctaGroup: NavItem;
+}
+
+export interface SocialLink {
+  id: number;
+  platform: "LINKEDIN" | "FACEBOOK" | "INSTAGRAM" | "TWITTER" | "YOUTUBE" | "TIKTOK";
+  href: string;
+  label: string;
+}
+
+export interface FooterMenu {
+  id: number;
+  title: string;
+  links: Link[];
 }
 
 export interface GlobalPageFooter {
   logo: Logo;
-  navItems: Link[];
-  socialLinks: Logo[];
+  footerMenus: FooterMenu[];
   text: string;
 }
 
@@ -62,8 +94,11 @@ export interface Base<
 export interface HeroProps extends Base<"blocks.hero"> {
   heading: string;
   text: string;
-  image: Image;
-  links: Link[];
+  mediaType?: "image" | "video";
+  image?: Image | null;
+  video?: { url: string; alternativeText?: string | null; mime?: string } | null;
+  textDark?: boolean;
+  links?: Link[];
 }
 
 export interface HeadingSectionProps extends Base<"blocks.heading-section"> {

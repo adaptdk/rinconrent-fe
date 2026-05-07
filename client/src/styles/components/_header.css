@@ -1,0 +1,95 @@
+/* ── Desktop dropdown ───────────────────────────────────────────────────────
+   Animated with opacity/visibility/transform so both :hover, :focus-within
+   and aria-expanded all work without display:none !important conflicts.
+──────────────────────────────────────────────────────────────────────────── */
+.header__dropdown {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin-top: 4px;
+  min-width: 220px;
+  background-color: var(--color-sand-white);
+  box-shadow: 0 2px 9px 0 rgba(42, 47, 51, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+
+/* Mouse hover or any descendant focused */
+.group:hover > .header__dropdown,
+.group:focus-within > .header__dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Keyboard/JS click via aria-expanded */
+[data-dropdown][aria-expanded="true"] + .header__dropdown,
+[data-lang-toggle][aria-expanded="true"] + .header__dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* ── Nav link hover (desktop) ───────────────────────────────────────────── */
+.header__nav-link {
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.header__nav-link:hover {
+  color: var(--color-dark-blue);
+  border-bottom: 1px solid var(--color-dark-blue);
+  padding-bottom: 5px; /* 6px - 1px border = no layout shift */
+}
+
+.header__nav-link--active {
+  color: var(--color-dark-blue);
+  background-color: var(--color-sand-white);
+}
+
+.header__nav-link--active:hover {
+  border-bottom: 0;
+  padding-bottom: 6px;
+}
+
+/* ── Focus-visible ──────────────────────────────────────────────────────── */
+.header__nav-link:focus-visible,
+[data-dropdown]:focus-visible,
+[data-lang-toggle]:focus-visible,
+[data-submenu-open]:focus-visible,
+[data-submenu-close]:focus-visible {
+  outline: 2px solid var(--color-dark-blue);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ── Chevron rotation ───────────────────────────────────────────────────── */
+[data-dropdown][aria-expanded="true"] svg,
+[data-lang-toggle][aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+/* ── Mobile submenu overlay ─────────────────────────────────────────────── */
+.header__mobile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-sand-white);
+  z-index: 1000;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+}
+
+.header__mobile-overlay.is-active {
+  transform: translateX(0);
+}

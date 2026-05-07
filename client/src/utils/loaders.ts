@@ -3,10 +3,10 @@ import { strapiClient } from "./strapi-client";
 const blocksPopulate = {
   on: {
     "blocks.hero": {
+      fields: ["heading", "text", "mediaType", "textDark"],
       populate: {
-        image: {
-          fields: ["url", "alternativeText"],
-        },
+        image: { fields: ["url", "alternativeText"] },
+        video: { fields: ["url", "alternativeText", "mime"] },
         links: true,
       },
     },
@@ -99,8 +99,17 @@ async function getGlobalPageData() {
               },
             },
           },
-          navItems: true,
-          cta: true,
+          topNav: true,
+          navItems: {
+            populate: {
+              children: true,
+            },
+          },
+          ctaGroup: {
+            populate: {
+              children: true,
+            },
+          },
         },
       },
       footer: {
@@ -112,15 +121,17 @@ async function getGlobalPageData() {
               },
             },
           },
-          navItems: true,
-          socialLinks: {
+          footerMenus: {
             populate: {
-              image: {
-                fields: ["url", "alternativeText"],
+              links: {
+                fields: ["href", "label", "isExternal", "isButtonLink", "type"],
               },
             },
           },
         },
+      },
+      socialLinks: {
+        fields: ["platform", "href", "label"],
       }
     },
   });
@@ -132,10 +143,35 @@ async function getGlobalPageData() {
 async function getLandingPageData() {
   const data = await getSingleType("landing-page", {
     populate: {
+      pageHeader: {
+        fields: ["hideHeader", "headerType", "headerSize", "horizontalLayout", "pretitle", "title", "subtitle"],
+        populate: {
+          image: { fields: ["url", "alternativeText"] },
+          video: { fields: ["url", "alternativeText", "mime"] },
+        },
+      },
       blocks: blocksPopulate,
     },
   });
   return data;
 }
 
-export { getGlobalPageData, getLandingPageData };
+const pageHeaderPopulate = {
+  fields: ["hideHeader", "headerType", "headerSize", "horizontalLayout", "pretitle", "title", "subtitle"],
+  populate: {
+    image: { fields: ["url", "alternativeText"] },
+    video: { fields: ["url", "alternativeText", "mime"] },
+  },
+};
+
+async function getPageHeader(slug: string) {
+  const data = await strapiClient.collection("pages").find({
+    filters: { slug: { $eq: slug } },
+    fields: ["slug"],
+    populate: { pageHeader: pageHeaderPopulate },
+    pagination: { limit: 1 },
+  } as any);
+  return (data?.data?.[0] as any)?.pageHeader ?? null;
+}
+
+export { getGlobalPageData, getLandingPageData, getPageHeader };

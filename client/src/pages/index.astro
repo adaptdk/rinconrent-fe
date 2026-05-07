@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import BlockRenderer from "../components/blocks/BlockRenderer.astro";
+import PageHeader from "../components/PageHeader.astro";
+import type { PageHeaderProps } from "../utils/types";
 
 import { getLandingPageData } from "../utils/loaders";
 
@@ -12,6 +14,7 @@ if (!landingPage) throw new Error("Landing page not found");
 ---
 
 <BaseLayout>
+  <PageHeader data={landingPage.pageHeader as PageHeaderProps | null} fallbackTitle={landingPage.title} />
   <BlockRenderer blocks={landingPage.blocks} />
 </BaseLayout>
 

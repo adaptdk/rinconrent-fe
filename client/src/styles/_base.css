@@ -1,0 +1,16 @@
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-secondary);
+  background: var(--color-surface);
+}
+
+::selection {
+  background: var(--color-primary-100);
+  color: var(--color-primary-900);
+}

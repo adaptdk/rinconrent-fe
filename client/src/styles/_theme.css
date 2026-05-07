@@ -1,0 +1,73 @@
+@theme {
+  /* ─── Primary palette ─────────────────────────────────────────── */
+  --color-primary-50: oklch(0.97 0.02 68);
+  --color-primary-100: oklch(0.93 0.05 68);
+  --color-primary-500: oklch(0.76 0.15 68);
+  --color-primary-600: oklch(0.68 0.16 68);
+  --color-primary-700: oklch(0.60 0.15 68);
+  --color-primary-900: oklch(0.40 0.10 68);
+
+  /* ─── Semantic surface / text / border ───────────────────────── */
+  --color-surface: oklch(0.99 0 0);
+  --color-surface-alt: oklch(0.97 0.005 260);
+  --color-surface-raised: oklch(1 0 0);
+
+  --color-secondary: oklch(0.30 0.01 260);
+  --color-muted: oklch(0.55 0.01 260);
+  --color-faint: oklch(0.72 0.01 260);
+
+  --color-border: oklch(0.90 0.005 260);
+  --color-border-hover: oklch(0.82 0.01 260);
+
+  /* ─── Brand colors ───────────────────────────────────────────── */
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+  --color-primary-alt: #DEA852;
+  --color-primary: #FCAF58;
+  --color-primary-dark: #FFE89E;
+  --color-blue: #101828;
+  --color-sand: #F4EAD7;
+  --color-sand-alt: #EFE6DA;
+  --color-dark-grey: #2A2F33;
+  --color-dark-grey-dimmed: #303941;
+  --color-light-blue: #F4F8FF;
+  --color-dark-blue: #435563;
+  --color-body-color: #454C52;
+  --color-light-grey: #DCD9D0;
+  --color-section-grey: #F9F9F9;
+  --color-grey-disabled: #767676;
+  --color-grey-border: #E8E6E0;
+  --color-sand-white: #FEFAEF;
+  --color-brown: #746E66;
+  --color-beige: #EEE2D2;
+  --color-gray-blue: #99ABB5;
+
+  /* ─── Font sizes ─────────────────────────────────────────────────────────
+     Heading sizes use clamp() for fluid scaling (mobile → desktop).
+     Viewport range: 375px → 1280px. Max values match the original pixel
+     sizes from the old site (which used html{font-size:10px}).
+     Body sizes are fixed — no fluid scaling needed.
+  ──────────────────────────────────────────────────────────────────────── */
+  --text-hero:    clamp(2.5rem,   4vw + 1.5rem,  4.75rem); /* 40px → 76px */
+  --text-h1:      clamp(2rem,     3vw + 1rem,    3.75rem); /* 32px → 60px */
+  --text-h2:      clamp(1.625rem, 2.5vw + 0.75rem, 3rem); /* 26px → 48px */
+  --text-h3:      clamp(1.375rem, 1.7vw + 0.75rem, 2.25rem); /* 22px → 36px */
+  --text-h4:      clamp(1.25rem,  1vw + 1rem,    1.875rem); /* 20px → 30px */
+  --text-h5:      1.5rem;   /* 24px */
+  --text-h6:      1.25rem;  /* 20px */
+
+  --text-body-xl:   1.25rem;  /* 20px */
+  --text-body-l:    1.125rem; /* 18px */
+  --text-body-base: 1rem;     /* 16px */
+  --text-body-s:    0.875rem; /* 14px */
+  --text-body-xs:   0.75rem;  /* 12px */
+  --text-button:    0.875rem; /* 14px */
+
+  /* ─── Font families ──────────────────────────────────────────── */
+  --font-heading: var(--font-cormorant), "Cormorant Garamond", serif;
+  --font-body: var(--font-proza), "Proza Libre", sans-serif;
+
+  /* ─── Radii ──────────────────────────────────────────────────── */
+  --radius-card: 1rem;
+  --radius-button: 0.5rem;
+}

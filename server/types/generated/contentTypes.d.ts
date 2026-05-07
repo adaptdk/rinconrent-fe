@@ -524,6 +524,9 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   };
   attributes: {
     banner: Schema.Attribute.Component<'layout.banner', false>;
+    contactAddress: Schema.Attribute.Text;
+    contactEmail: Schema.Attribute.String;
+    contactPhone: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -537,6 +540,7 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    socialLinks: Schema.Attribute.Component<'shared.social-link', true>;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -579,6 +583,7 @@ export interface ApiLandingPageLandingPage extends Struct.SingleTypeSchema {
       'api::landing-page.landing-page'
     > &
       Schema.Attribute.Private;
+    pageHeader: Schema.Attribute.Component<'layout.page-header', false>;
     publishedAt: Schema.Attribute.DateTime;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
@@ -620,6 +625,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::page.page'> &
       Schema.Attribute.Private;
+    pageHeader: Schema.Attribute.Component<'layout.page-header', false>;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'title'>;
     title: Schema.Attribute.String;

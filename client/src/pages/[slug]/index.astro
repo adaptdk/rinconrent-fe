@@ -1,11 +1,12 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BlockRenderer from "../../components/blocks/BlockRenderer.astro";
+import PageHeader from "../../components/PageHeader.astro";
 import { getCollection } from "astro:content";
+import { getPageHeader } from "../../utils/loaders";
 
 import type { CollectionEntry } from "astro:content";
 
-// Use with Astro's collection entry type
 type Page = CollectionEntry<"strapiPages">;
 
 export async function getStaticPaths() {
@@ -23,9 +24,13 @@ export async function getStaticPaths() {
 
 
 const { props } = Astro;
-const { blocks } = props;
+const { title, blocks } = props;
+const { slug } = Astro.params;
+
+const pageHeader = await getPageHeader(slug);
 ---
 
 <BaseLayout>
+  <PageHeader data={pageHeader} fallbackTitle={title} />
   <BlockRenderer blocks={blocks || []} />
 </BaseLayout>

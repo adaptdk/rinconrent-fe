@@ -87,7 +87,12 @@ export interface BlocksHero extends Struct.ComponentSchema {
     heading: Schema.Attribute.String;
     image: Schema.Attribute.Media<'images'>;
     links: Schema.Attribute.Component<'shared.link', true>;
+    mediaType: Schema.Attribute.Enumeration<['image', 'video']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'image'>;
     text: Schema.Attribute.RichText;
+    textDark: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    video: Schema.Attribute.Media<'videos'>;
   };
 }
 
@@ -148,9 +153,8 @@ export interface LayoutFooter extends Struct.ComponentSchema {
     displayName: 'Footer';
   };
   attributes: {
+    footerMenus: Schema.Attribute.Component<'shared.footer-menu', true>;
     logo: Schema.Attribute.Component<'shared.logo', false>;
-    navItems: Schema.Attribute.Component<'shared.link', true>;
-    socialLinks: Schema.Attribute.Component<'shared.logo', true>;
     text: Schema.Attribute.Text;
   };
 }
@@ -162,9 +166,34 @@ export interface LayoutHeader extends Struct.ComponentSchema {
     displayName: 'Header';
   };
   attributes: {
-    cta: Schema.Attribute.Component<'shared.link', false>;
+    ctaGroup: Schema.Attribute.Component<'shared.nav-item', false>;
     logo: Schema.Attribute.Component<'shared.logo', false>;
-    navItems: Schema.Attribute.Component<'shared.link', true>;
+    navItems: Schema.Attribute.Component<'shared.nav-item', true>;
+    topNav: Schema.Attribute.Component<'shared.link', true>;
+  };
+}
+
+export interface LayoutPageHeader extends Struct.ComponentSchema {
+  collectionName: 'components_layout_page_headers';
+  info: {
+    description: '';
+    displayName: 'Page Header';
+  };
+  attributes: {
+    headerSize: Schema.Attribute.Enumeration<['small', 'medium']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'small'>;
+    headerType: Schema.Attribute.Enumeration<['text', 'image', 'video']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'text'>;
+    hideHeader: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    horizontalLayout: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+    image: Schema.Attribute.Media<'images'>;
+    pretitle: Schema.Attribute.String;
+    subtitle: Schema.Attribute.Text;
+    title: Schema.Attribute.String;
+    video: Schema.Attribute.Media<'videos'>;
   };
 }
 
@@ -189,6 +218,18 @@ export interface SharedCommunityLink extends Struct.ComponentSchema {
     href: Schema.Attribute.String;
     label: Schema.Attribute.String;
     title: Schema.Attribute.String;
+  };
+}
+
+export interface SharedFooterMenu extends Struct.ComponentSchema {
+  collectionName: 'components_shared_footer_menus';
+  info: {
+    description: 'A grouped column of footer navigation links with a title';
+    displayName: 'Footer Menu';
+  };
+  attributes: {
+    links: Schema.Attribute.Component<'shared.link', true>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
@@ -220,6 +261,35 @@ export interface SharedLogo extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedNavItem extends Struct.ComponentSchema {
+  collectionName: 'components_shared_nav_items';
+  info: {
+    description: 'A navigation item with optional dropdown children';
+    displayName: 'Nav Item';
+  };
+  attributes: {
+    children: Schema.Attribute.Component<'shared.link', true>;
+    href: Schema.Attribute.String;
+    isExternal: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    label: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface SharedSocialLink extends Struct.ComponentSchema {
+  collectionName: 'components_shared_social_links';
+  info: {
+    description: 'A social media platform link';
+    displayName: 'Social Link';
+  };
+  attributes: {
+    href: Schema.Attribute.String;
+    label: Schema.Attribute.String;
+    platform: Schema.Attribute.Enumeration<
+      ['LINKEDIN', 'FACEBOOK', 'INSTAGRAM', 'TWITTER', 'YOUTUBE', 'TIKTOK']
+    >;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
@@ -237,10 +307,14 @@ declare module '@strapi/strapi' {
       'layout.banner': LayoutBanner;
       'layout.footer': LayoutFooter;
       'layout.header': LayoutHeader;
+      'layout.page-header': LayoutPageHeader;
       'shared.card': SharedCard;
       'shared.community-link': SharedCommunityLink;
+      'shared.footer-menu': SharedFooterMenu;
       'shared.link': SharedLink;
       'shared.logo': SharedLogo;
+      'shared.nav-item': SharedNavItem;
+      'shared.social-link': SharedSocialLink;
     }
   }
 }

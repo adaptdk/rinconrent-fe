@@ -17,6 +17,11 @@
     "description": {
       "type": "text"
     },
+    "pageHeader": {
+      "type": "component",
+      "repeatable": false,
+      "component": "layout.page-header"
+    },
     "blocks": {
       "type": "dynamiczone",
       "components": [

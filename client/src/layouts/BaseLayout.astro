@@ -8,7 +8,7 @@ import Banner from "../components/Banner.astro";
 import Footer from "../components/Footer.astro";
 
 const data = await getGlobalPageData();
-const { header, banner, footer } = data;
+const { header, banner, footer, contactPhone, contactEmail, contactAddress, socialLinks } = data;
 ---
 
 <!doctype html>
@@ -17,7 +17,8 @@ const { header, banner, footer } = data;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <Font cssVariable="--font-roboto" preload />
+    <Font cssVariable="--font-cormorant" preload />
+    <Font cssVariable="--font-proza" preload />
     <meta name="generator" content={Astro.generator} />
     <title>Astro + Strapi</title>
     <meta name="description" content="A modern Astro and Strapi example project" />
@@ -28,6 +29,6 @@ const { header, banner, footer } = data;
     <main class="flex-1">
       <slot />
     </main>
-    { footer && <Footer data={footer} /> }
+    { footer && <Footer footer={footer} {contactPhone} {contactEmail} {contactAddress} {socialLinks} /> }
   </body>
 </html>

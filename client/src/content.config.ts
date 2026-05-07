@@ -23,6 +23,22 @@ const linkSchema = z.object({
   type: z.enum(["PRIMARY", "SECONDARY"]).optional(),
 });
 
+const pageHeaderSchema = z.object({
+  hideHeader: z.boolean().optional(),
+  headerType: z.enum(["text", "image", "video"]).optional(),
+  headerSize: z.enum(["small", "medium"]).optional(),
+  horizontalLayout: z.boolean().optional(),
+  pretitle: z.string().nullable().optional(),
+  title: z.string().nullable().optional(),
+  subtitle: z.string().nullable().optional(),
+  image: imageSchema.nullable().optional(),
+  video: z.object({
+    url: z.string(),
+    alternativeText: z.string().nullable().optional(),
+    mime: z.string().optional(),
+  }).nullable().optional(),
+}).nullable().optional();
+
 const blockBase = {
   id: z.number().optional(),
   __component: z.string(),
@@ -40,7 +56,14 @@ const blockSchema = z.discriminatedUnion("__component", [
     __component: z.literal("blocks.hero"),
     heading: z.string(),
     text: z.string(),
+    mediaType: z.enum(["image", "video"]).nullable().optional(),
     image: imageSchema.nullable().optional(),
+    video: z.object({
+      url: z.string(),
+      alternativeText: z.string().nullable().optional(),
+      mime: z.string().optional(),
+    }).nullable().optional(),
+    textDark: z.preprocess(v => (typeof v === "boolean" ? v : false), z.boolean()).optional(),
     links: z.array(linkSchema).optional(),
   }),
   z.object({
@@ -165,9 +188,10 @@ const blockSchema = z.discriminatedUnion("__component", [
 const blocksPopulate = {
   on: {
     "blocks.hero": {
-      fields: ["heading", "text"],
+      fields: ["heading", "text", "mediaType", "textDark"],
       populate: {
         image: { fields: ["url", "alternativeText"] },
+        video: { fields: ["url", "alternativeText", "mime"] },
         links: { fields: ["href", "label", "isExternal", "isButtonLink", "type"] },
       },
     },
@@ -235,6 +259,14 @@ const blocksPopulate = {
         },
       },
     },
+  },
+};
+
+const pageHeaderPopulate = {
+  fields: ["hideHeader", "headerType", "headerSize", "horizontalLayout", "pretitle", "title", "subtitle"],
+  populate: {
+    image: { fields: ["url", "alternativeText"] },
+    video: { fields: ["url", "alternativeText", "mime"] },
   },
 };
 

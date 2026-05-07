@@ -11,15 +11,10 @@
       "repeatable": false,
       "component": "shared.logo"
     },
-    "navItems": {
+    "footerMenus": {
       "type": "component",
       "repeatable": true,
-      "component": "shared.link"
-    },
-    "socialLinks": {
-      "type": "component",
-      "repeatable": true,
-      "component": "shared.logo"
+      "component": "shared.footer-menu"
     },
     "text": {
       "type": "text"

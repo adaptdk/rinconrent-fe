@@ -1,0 +1,60 @@
+{
+  "collectionName": "components_layout_page_headers",
+  "info": {
+    "displayName": "Page Header",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "hideHeader": {
+      "type": "boolean",
+      "default": false,
+      "description": "When enabled, the page header is hidden entirely (useful for block-built pages)"
+    },
+    "headerType": {
+      "type": "enumeration",
+      "enum": ["text", "image", "video"],
+      "default": "text",
+      "required": true,
+      "description": "Text = plain background. Image/Video = full-width media background with overlay."
+    },
+    "headerSize": {
+      "type": "enumeration",
+      "enum": ["small", "medium"],
+      "default": "small",
+      "required": true,
+      "description": "Controls the height of the header section"
+    },
+    "horizontalLayout": {
+      "type": "boolean",
+      "default": false,
+      "description": "Side-by-side: title on the left, subtitle on the right"
+    },
+    "pretitle": {
+      "type": "string",
+      "description": "Small label above the title (e.g. category or section name)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Overrides the page title. Leave blank to use the page title."
+    },
+    "subtitle": {
+      "type": "text",
+      "description": "Supporting text below the title"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"],
+      "description": "Background image (used when Header Type is set to Image)"
+    },
+    "video": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["videos"],
+      "description": "Background video (used when Header Type is set to Video)"
+    }
+  }
+}

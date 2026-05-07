@@ -46,6 +46,41 @@ This project uses a custom Tailwind v4 theme defined in `client/src/styles/globa
 - `Pagination` — pagination controls, only render when multiple pages exist
 - `BlockRenderer` — renders Strapi dynamic zone blocks
 
+## CSS Conventions
+
+**Tailwind-first, BEM for structure.**
+
+- Use Tailwind utilities inline for layout, spacing, color, and responsive variants.
+- Use BEM class names when a component needs named states, variants, or selectors too complex for inline utilities (hover border animations, `:focus-visible`, JS-toggled states, active page indicators).
+- Each component with BEM styles gets its own partial in `client/src/styles/components/`.
+- Import all partials through `client/src/styles/global.css`.
+
+**File structure:**
+```
+client/src/styles/
+├── global.css              ← entry: @import tailwindcss + all partials
+├── _theme.css              ← @theme design tokens
+├── _base.css               ← html, body, ::selection
+└── components/
+    ├── _button.css         ← .button, .button-primary, .button-secondary
+    └── _header.css         ← .header__* BEM styles
+```
+
+**Naming:**
+- Block: component name — `.header`, `.topbar`
+- Element: `__` — `.header__logo`, `.header__nav-link`
+- Modifier: `--` — `.header__nav-link--active`
+
+**When to use each:**
+- Tailwind (inline in HTML): layout, spacing, colors, font sizes, responsive prefixes, hover states expressible as a single class
+- CSS partials (raw CSS, no `@apply`): hover border-bottom with padding compensation, `aria-expanded` selector states, complex transitions that need exact values, anything Tailwind can't cleanly express inline
+
+**No `@apply`** — if Tailwind can do it inline, do it inline. CSS partials contain real CSS only.
+
+### Astro template gotchas
+
+- **`<video>` boolean attributes** — standalone `autoplay`, `muted`, `loop`, `playsinline` can be dropped by Astro's compiler. Always use explicit `={true}`: `autoplay={true} muted={true} loop={true} playsinline={true}`.
+
 ## Strapi Conventions
 
 - Always use `fields` to select only needed columns — never `populate: "*"`
@@ -54,6 +89,28 @@ This project uses a custom Tailwind v4 theme defined in `client/src/styles/globa
 - Seed scripts should set public permissions, upload placeholder images, create entries, and add nav links
 - The `uploadImage` function uses `filepath`, `originalFilename`, `mimetype` (not `path`, `name`, `type`)
 - Run `yarn clean` in `server/` after deleting content types to clear stale dist files
+
+### Two populate configs — keep both in sync
+
+There are **two independent populate configs** for blocks. When adding or renaming fields on any block, update both:
+
+| File | Used by |
+|---|---|
+| `client/src/utils/loaders.ts` | Landing page + any direct `strapiClient` call |
+| `client/src/content.config.ts` | Astro content collections (`strapiPages`, `strapiPosts`, …) |
+
+Grep for the block key (e.g. `"blocks.hero"`) across `client/src/` to find every occurrence before declaring a field change done.
+
+### Content layer cache
+
+`strapi-community-astro-loader` caches data in `client/.astro/data-store.json`. It does not auto-refresh when Strapi content changes. If the Strapi API returns the correct value but the Astro page still shows old data, clear the cache:
+
+```bash
+rm client/.astro/data-store.json
+# then restart yarn dev
+```
+
+This only affects content collections. Pages using `loaders.ts` always fetch fresh data at request time.
 
 ## Skills
 

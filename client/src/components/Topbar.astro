@@ -1,0 +1,33 @@
+---
+import type { Link } from "../utils/types";
+import LanguagePicker from "./LanguagePicker.astro";
+
+interface Props {
+  topNav: Link[];
+}
+
+const { topNav } = Astro.props;
+---
+
+<div class="hidden lg:block bg-dark-blue relative z-[999]">
+  <div class="container mx-auto flex justify-between items-center py-2 px-4">
+    <LanguagePicker />
+
+    {topNav.length > 0 && (
+      <ul class="flex gap-6">
+        {topNav.map(link => (
+          <li>
+            <a
+              href={link.href}
+              class="text-sand-white text-body-s hover:opacity-75 transition-opacity duration-200"
+              target={link.isExternal ? "_blank" : "_self"}
+              rel={link.isExternal ? "noopener noreferrer" : undefined}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</div>
