@@ -1,0 +1,12 @@
+{
+  "collectionName": "components_blocks_embed_codes",
+  "info": {
+    "displayName": "Embed Code",
+    "icon": "code"
+  },
+  "attributes": {
+    "code": {
+      "type": "text"
+    }
+  }
+}

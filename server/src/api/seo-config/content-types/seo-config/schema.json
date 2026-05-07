@@ -1,0 +1,27 @@
+{
+  "kind": "singleType",
+  "collectionName": "seo_config",
+  "info": {
+    "singularName": "seo-config",
+    "pluralName": "seo-configs",
+    "displayName": "SEO Config",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "destinationsBasePath": {
+      "type": "string",
+      "default": "destinations",
+      "pluginOptions": {
+        "i18n": { "localized": true }
+      }
+    }
+  }
+}

@@ -18,10 +18,8 @@ const blocksPopulate = {
     },
     "blocks.content-with-image": {
       populate: {
-        image: {
-          fields: ["url", "alternativeText"],
-        },
-        link: true,
+        image: { fields: ["url", "alternativeText"] },
+        links: { fields: ["href", "label", "isExternal", "type"] },
       },
     },
     "blocks.faqs": {
@@ -69,6 +67,28 @@ const blocksPopulate = {
               fields: ["url", "alternativeText"],
             },
           },
+        },
+      },
+    },
+    "blocks.featured-destinations": {
+      fields: ["title", "content"],
+      populate: {
+        destinations: {
+          fields: ["title", "slug"],
+          populate: {
+            teaserImage: { fields: ["url", "alternativeText"] },
+          },
+        },
+      },
+    },
+    "blocks.embed-code": {
+      fields: ["code"],
+    },
+    "blocks.testimonials": {
+      fields: ["title", "content"],
+      populate: {
+        testimonials: {
+          fields: ["content", "author"],
         },
       },
     },
@@ -174,4 +194,62 @@ async function getPageHeader(slug: string) {
   return (data?.data?.[0] as any)?.pageHeader ?? null;
 }
 
-export { getGlobalPageData, getLandingPageData, getPageHeader };
+async function getAllPageSlugs(): Promise<string[]> {
+  const pages = await strapiClient.collection("pages").find({
+    fields: ["slug"],
+    pagination: { limit: 200 },
+  } as any);
+  return (pages?.data ?? []).map((p: any) => p.slug).filter(Boolean);
+}
+
+async function getPageData(slug: string) {
+  const data = await strapiClient.collection("pages").find({
+    filters: { slug: { $eq: slug } },
+    fields: ["title", "slug", "description"],
+    populate: {
+      pageHeader: pageHeaderPopulate,
+      blocks: blocksPopulate,
+    },
+    pagination: { limit: 1 },
+  } as any);
+  return (data?.data?.[0] as any) ?? null;
+}
+
+async function getAllDestinationSlugs(locale = "en"): Promise<string[]> {
+  const destinations = await strapiClient.collection("destinations").find({
+    locale,
+    fields: ["slug"],
+    pagination: { limit: 200 },
+  } as any);
+  return (destinations?.data ?? []).map((d: any) => d.slug).filter(Boolean);
+}
+
+async function getDestinationData(slug: string, locale = "en") {
+  const data = await strapiClient.collection("destinations").find({
+    locale,
+    filters: { slug: { $eq: slug } },
+    fields: ["title", "slug", "description", "locale"],
+    populate: {
+      teaserImage: { fields: ["url", "alternativeText"] },
+      pageHeader: pageHeaderPopulate,
+      blocks: blocksPopulate,
+    },
+    pagination: { limit: 1 },
+  } as any);
+  return (data?.data?.[0] as any) ?? null;
+}
+
+async function getSeoConfig(locale = "en"): Promise<{ destinationsBasePath?: string }> {
+  try {
+    const data = await strapiClient.single("seo-config").find({
+      locale,
+      fields: ["destinationsBasePath"],
+    } as any);
+    return (data?.data ?? {}) as { destinationsBasePath?: string };
+  } catch {
+    // No entry created yet — use schema defaults.
+    return {};
+  }
+}
+
+export { getGlobalPageData, getLandingPageData, getPageHeader, getAllPageSlugs, getPageData, getAllDestinationSlugs, getDestinationData, getSeoConfig };

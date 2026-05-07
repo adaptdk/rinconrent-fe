@@ -1,0 +1,15 @@
+---
+import type { EmbedCodeProps } from "../../utils/types";
+
+interface Props {
+  data: EmbedCodeProps;
+}
+
+const { data: { code } } = Astro.props;
+---
+
+{code && (
+  <section>
+    <div class="mx-auto container px-6 py-12" set:html={code} />
+  </section>
+)}

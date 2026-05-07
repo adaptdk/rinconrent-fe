@@ -28,6 +28,7 @@ This project uses a custom Tailwind v4 theme defined in `client/src/styles/globa
 
 ### Design Principles
 
+- **Blocks are full-width by default** — the `<section>` element spans 100% of the viewport. The inner `<div class="mx-auto max-w-…">` is what constrains content width and defines horizontal position. Never constrain width on `<section>` itself.
 - **Content-appropriate layouts** — different content types should have different UI patterns. A team page should not look like a blog page. Match the layout to how users expect to see that type of content.
 - **Visual hierarchy** — the most important field should be the most prominent element (faces for people, dates for events, prices for products, images for portfolios).
 - **Generous spacing** — prefer spacious layouts over cramped ones. Use `gap-8` to `gap-12` for grids, `mt-10` to `mt-16` between sections.
@@ -100,6 +101,14 @@ There are **two independent populate configs** for blocks. When adding or renami
 | `client/src/content.config.ts` | Astro content collections (`strapiPages`, `strapiPosts`, …) |
 
 Grep for the block key (e.g. `"blocks.hero"`) across `client/src/` to find every occurrence before declaring a field change done.
+
+### Admin UI field labels and descriptions
+
+`schema.json` attribute `description` fields appear in the **Content-Type Builder only** — not in the Content Manager edit view. Edit view labels and descriptions are managed in code via `server/src/admin/content-manager-config.ts` and applied to the database on every Strapi startup via the bootstrap in `server/src/index.ts`.
+
+- To change a field label or hint: edit `content-manager-config.ts`, restart Strapi.
+- Never use "Configure the view" in the admin for labels/descriptions — it writes to the database only and will be overwritten on restart.
+- Full details: `server/docs/content-manager-config.md`
 
 ### Content layer cache
 

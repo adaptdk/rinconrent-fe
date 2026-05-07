@@ -76,7 +76,10 @@ export type ComponentType =
   | "blocks.featured-articles"
   | "blocks.newsletter"
   | "blocks.community-links"
-  | "blocks.featured-workshops";
+  | "blocks.featured-workshops"
+  | "blocks.featured-destinations"
+  | "blocks.testimonials"
+  | "blocks.embed-code";
 
 export interface Base<
   T extends ComponentType,
@@ -120,9 +123,9 @@ export interface ContentWithImageProps
   extends Base<"blocks.content-with-image"> {
   heading: string;
   text: string;
-  link: Link;
+  imagePosition: "left" | "right" | "full_width";
   image: Image;
-  reversed: boolean;
+  links?: Link[];
 }
 
 export interface FaqsProps extends Base<"blocks.faqs"> {
@@ -196,6 +199,33 @@ export interface FeaturedWorkshopsProps extends Base<"blocks.featured-workshops"
   }[];
 }
 
+export interface FeaturedDestinationsProps extends Base<"blocks.featured-destinations"> {
+  title?: string | null;
+  content?: string | null;
+  destinations?: {
+    id?: number;
+    documentId?: string;
+    title?: string | null;
+    slug: string;
+    teaserImage?: Image | null;
+  }[];
+}
+
+export interface TestimonialsProps extends Base<"blocks.testimonials"> {
+  title?: string | null;
+  content?: string | null;
+  testimonials?: {
+    id?: number;
+    documentId?: string;
+    content: string;
+    author: string;
+  }[];
+}
+
+export interface EmbedCodeProps extends Base<"blocks.embed-code"> {
+  code?: string | null;
+}
+
 export type BlockData =
   | HeroProps
   | HeadingSectionProps
@@ -207,4 +237,7 @@ export type BlockData =
   | FeaturedArticlesProps
   | NewsletterProps
   | CommunityLinksProps
-  | FeaturedWorkshopsProps;
+  | FeaturedWorkshopsProps
+  | FeaturedDestinationsProps
+  | TestimonialsProps
+  | EmbedCodeProps;

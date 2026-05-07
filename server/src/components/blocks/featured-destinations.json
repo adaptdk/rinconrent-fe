@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_blocks_featured_destinations",
+  "info": {
+    "displayName": "Featured Destinations"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "text"
+    },
+    "destinations": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::destination.destination"
+    }
+  }
+}

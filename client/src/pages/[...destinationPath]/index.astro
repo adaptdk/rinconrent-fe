@@ -1,0 +1,36 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlockRenderer from "../../components/blocks/BlockRenderer.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import { getAllDestinationSlugs, getDestinationData, getSeoConfig } from "../../utils/loaders";
+
+export async function getStaticPaths() {
+  // Extend this array as new locales are added in Strapi admin → Settings → Internationalization
+  const locales = ["en"];
+
+  const paths = await Promise.all(
+    locales.map(async (locale) => {
+      const [slugs, seoConfig] = await Promise.all([
+        getAllDestinationSlugs(locale),
+        getSeoConfig(locale),
+      ]);
+      const prefix = seoConfig.destinationsBasePath ?? "destinations";
+      return slugs.map((slug) => ({
+        params: { destinationPath: `${prefix}/${slug}` },
+        props: { slug, locale },
+      }));
+    })
+  );
+
+  return paths.flat();
+}
+
+const { slug, locale } = Astro.props;
+const destination = await getDestinationData(slug, locale);
+const { title, blocks, pageHeader } = destination;
+---
+
+<BaseLayout>
+  <PageHeader data={pageHeader} fallbackTitle={title} />
+  <BlockRenderer blocks={blocks || []} />
+</BaseLayout>

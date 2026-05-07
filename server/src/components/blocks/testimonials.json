@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_blocks_testimonials",
+  "info": {
+    "displayName": "Testimonials",
+    "icon": "quote"
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "text"
+    },
+    "testimonials": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::testimonial.testimonial"
+    }
+  }
+}

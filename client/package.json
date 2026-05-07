@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "rm -f .astro/data-store.json && astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
@@ -12,6 +12,8 @@
     "@strapi/client": "^1.2.0",
     "@tailwindcss/vite": "^4.0.9",
     "astro": "6.1.3",
+    "embla-carousel": "^8.6.0",
+    "lightningcss-darwin-arm64": "^1.32.0",
     "marked": "^15.0.7",
     "strapi-community-astro-loader": "^4.0.0",
     "tailwindcss": "^4.0.9"

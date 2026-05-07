@@ -29,9 +29,23 @@ export interface BlocksContentWithImage extends Struct.ComponentSchema {
   attributes: {
     heading: Schema.Attribute.String;
     image: Schema.Attribute.Media<'images'>;
-    link: Schema.Attribute.Component<'shared.link', false>;
-    reversed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    imagePosition: Schema.Attribute.Enumeration<
+      ['left', 'right', 'full_width']
+    > &
+      Schema.Attribute.DefaultTo<'right'>;
+    links: Schema.Attribute.Component<'shared.link', true>;
     text: Schema.Attribute.RichText;
+  };
+}
+
+export interface BlocksEmbedCode extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_embed_codes';
+  info: {
+    displayName: 'Embed Code';
+    icon: 'code';
+  };
+  attributes: {
+    code: Schema.Attribute.Text;
   };
 }
 
@@ -52,6 +66,21 @@ export interface BlocksFeaturedArticles extends Struct.ComponentSchema {
   };
   attributes: {
     articles: Schema.Attribute.Relation<'oneToMany', 'api::article.article'>;
+  };
+}
+
+export interface BlocksFeaturedDestinations extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_featured_destinations';
+  info: {
+    displayName: 'Featured Destinations';
+  };
+  attributes: {
+    content: Schema.Attribute.Text;
+    destinations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::destination.destination'
+    >;
+    title: Schema.Attribute.String;
   };
 }
 
@@ -130,6 +159,22 @@ export interface BlocksPersonCard extends Struct.ComponentSchema {
     personJob: Schema.Attribute.String;
     personName: Schema.Attribute.String;
     text: Schema.Attribute.Text;
+  };
+}
+
+export interface BlocksTestimonials extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_testimonials';
+  info: {
+    displayName: 'Testimonials';
+    icon: 'quote';
+  };
+  attributes: {
+    content: Schema.Attribute.Text;
+    testimonials: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::testimonial.testimonial'
+    >;
+    title: Schema.Attribute.String;
   };
 }
 
@@ -240,10 +285,10 @@ export interface SharedLink extends Struct.ComponentSchema {
     displayName: 'Link';
   };
   attributes: {
-    href: Schema.Attribute.String;
+    href: Schema.Attribute.String & Schema.Attribute.Required;
     isButtonLink: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     isExternal: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    label: Schema.Attribute.String;
+    label: Schema.Attribute.String & Schema.Attribute.Required;
     type: Schema.Attribute.Enumeration<['PRIMARY', 'SECONDARY']>;
   };
 }
@@ -296,14 +341,17 @@ declare module '@strapi/strapi' {
       'blocks.card-grid': BlocksCardGrid;
       'blocks.community-links': BlocksCommunityLinks;
       'blocks.content-with-image': BlocksContentWithImage;
+      'blocks.embed-code': BlocksEmbedCode;
       'blocks.faqs': BlocksFaqs;
       'blocks.featured-articles': BlocksFeaturedArticles;
+      'blocks.featured-destinations': BlocksFeaturedDestinations;
       'blocks.featured-workshops': BlocksFeaturedWorkshops;
       'blocks.heading-section': BlocksHeadingSection;
       'blocks.hero': BlocksHero;
       'blocks.markdown': BlocksMarkdown;
       'blocks.newsletter': BlocksNewsletter;
       'blocks.person-card': BlocksPersonCard;
+      'blocks.testimonials': BlocksTestimonials;
       'layout.banner': LayoutBanner;
       'layout.footer': LayoutFooter;
       'layout.header': LayoutHeader;

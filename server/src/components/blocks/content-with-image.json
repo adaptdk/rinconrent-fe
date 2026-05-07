@@ -5,20 +5,16 @@
   },
   "options": {},
   "attributes": {
-    "reversed": {
-      "type": "boolean",
-      "default": false
-    },
     "heading": {
       "type": "string"
     },
     "text": {
       "type": "richtext"
     },
-    "link": {
-      "type": "component",
-      "repeatable": false,
-      "component": "shared.link"
+    "imagePosition": {
+      "type": "enumeration",
+      "enum": ["left", "right", "full_width"],
+      "default": "right"
     },
     "image": {
       "allowedTypes": [
@@ -26,6 +22,11 @@
       ],
       "type": "media",
       "multiple": false
+    },
+    "links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.link"
     }
   }
 }

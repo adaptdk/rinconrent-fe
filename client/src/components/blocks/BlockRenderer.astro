@@ -11,7 +11,9 @@ import FeaturedArticles from "./FeaturedArticles.astro";
 import Newsletter from "./Newsletter.astro";
 import CommunityLinks from "./CommunityLinks.astro";
 import FeaturedWorkshops from "./FeaturedWorkshops.astro";
-
+import FeaturedDestinations from "./FeaturedDestinations.astro";
+import Testimonials from "./Testimonials.astro";
+import EmbedCode from "./EmbedCode.astro";
 
 const componentMap: Record<ComponentType, any> = {
   "blocks.hero": Hero,
@@ -25,6 +27,9 @@ const componentMap: Record<ComponentType, any> = {
   "blocks.newsletter": Newsletter,
   "blocks.community-links": CommunityLinks,
   "blocks.featured-workshops": FeaturedWorkshops,
+  "blocks.featured-destinations": FeaturedDestinations,
+  "blocks.testimonials": Testimonials,
+  "blocks.embed-code": EmbedCode,
 };
 
 const { blocks } = Astro.props;

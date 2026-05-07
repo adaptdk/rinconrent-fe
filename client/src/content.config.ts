@@ -20,7 +20,7 @@ const linkSchema = z.object({
   label: z.string().optional(),
   isExternal: z.boolean().optional(),
   isButtonLink: z.boolean().optional(),
-  type: z.enum(["PRIMARY", "SECONDARY"]).optional(),
+  type: z.enum(["PRIMARY", "SECONDARY"]).nullable().optional(),
 });
 
 const pageHeaderSchema = z.object({
@@ -90,9 +90,9 @@ const blockSchema = z.discriminatedUnion("__component", [
     __component: z.literal("blocks.content-with-image"),
     heading: z.string(),
     text: z.string(),
+    imagePosition: z.enum(["left", "right", "full_width"]).nullish().transform(v => v ?? "right"),
     image: imageSchema,
-    link: linkSchema,
-    reversed: z.boolean().optional(),
+    links: z.array(linkSchema).optional(),
   }),
   z.object({
     ...blockBase,
@@ -164,6 +164,21 @@ const blockSchema = z.discriminatedUnion("__component", [
   }),
   z.object({
     ...blockBase,
+    __component: z.literal("blocks.featured-destinations"),
+    title: z.string().nullable().optional(),
+    content: z.string().nullable().optional(),
+    destinations: z.array(
+      z.object({
+        id: z.number().optional(),
+        documentId: z.string().optional(),
+        title: z.string().nullable().optional(),
+        slug: z.string(),
+        teaserImage: imageSchema.nullable().optional(),
+      })
+    ).optional(),
+  }),
+  z.object({
+    ...blockBase,
     __component: z.literal("blocks.featured-workshops"),
     workshops: z.array(
       z.object({
@@ -179,6 +194,25 @@ const blockSchema = z.discriminatedUnion("__component", [
         coverImage: imageSchema.nullable().optional(),
       })
     ),
+  }),
+  z.object({
+    ...blockBase,
+    __component: z.literal("blocks.embed-code"),
+    code: z.string().nullable().optional(),
+  }),
+  z.object({
+    ...blockBase,
+    __component: z.literal("blocks.testimonials"),
+    title: z.string().nullable().optional(),
+    content: z.string().nullable().optional(),
+    testimonials: z.array(
+      z.object({
+        id: z.number().optional(),
+        documentId: z.string().optional(),
+        content: z.string(),
+        author: z.string(),
+      })
+    ).optional(),
   }),
 ]);
 
@@ -204,10 +238,10 @@ const blocksPopulate = {
       },
     },
     "blocks.content-with-image": {
-      fields: ["heading", "text", "reversed"],
+      fields: ["heading", "text", "imagePosition"],
       populate: {
         image: { fields: ["url", "alternativeText"] },
-        link: { fields: ["href", "label", "isExternal"] },
+        links: true,
       },
     },
     "blocks.faqs": {
@@ -256,6 +290,28 @@ const blocksPopulate = {
           populate: {
             coverImage: { fields: ["url", "alternativeText"] },
           },
+        },
+      },
+    },
+    "blocks.featured-destinations": {
+      fields: ["title", "content"],
+      populate: {
+        destinations: {
+          fields: ["title", "slug"],
+          populate: {
+            teaserImage: { fields: ["url", "alternativeText"] },
+          },
+        },
+      },
+    },
+    "blocks.embed-code": {
+      fields: ["code"],
+    },
+    "blocks.testimonials": {
+      fields: ["title", "content"],
+      populate: {
+        testimonials: {
+          fields: ["content", "author"],
         },
       },
     },
@@ -333,7 +389,7 @@ const strapiPages = defineCollection({
   }),
   schema: z.object({
     title: z.string().nullable().optional(),
-    slug: z.string(),
+    slug: z.preprocess(v => (typeof v === "string" ? v : null), z.string().nullable().optional()),
     blocks: z.array(blockSchema).optional(),
   }),
 });
@@ -385,9 +441,34 @@ const strapiProducts = defineCollection({
   }),
 });
 
+const strapiDestinations = defineCollection({
+  loader: strapiLoader({
+    contentType: "destination",
+    clientConfig,
+    params: {
+      locale: "all",
+      fields: ["title", "slug", "locale"],
+      populate: {
+        teaserImage: { fields: ["url", "alternativeText"] },
+        pageHeader: pageHeaderPopulate,
+        blocks: blocksPopulate,
+      },
+    },
+  }),
+  schema: z.object({
+    title: z.string().nullable().optional(),
+    slug: z.string(),
+    locale: z.string().optional(),
+    teaserImage: imageSchema.nullable().optional(),
+    pageHeader: pageHeaderSchema,
+    blocks: z.array(blockSchema).optional(),
+  }),
+});
+
 export const collections = {
   strapiPosts,
   strapiPages,
   strapiWorkshops,
   strapiProducts,
+  strapiDestinations,
 };

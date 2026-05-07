@@ -33,7 +33,10 @@
         "blocks.person-card",
         "blocks.markdown",
         "blocks.featured-articles",
-        "blocks.newsletter"
+        "blocks.newsletter",
+        "blocks.featured-destinations",
+        "blocks.testimonials",
+        "blocks.embed-code"
       ]
     }
   }

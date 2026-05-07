@@ -1,0 +1,171 @@
+---
+import type { FeaturedDestinationsProps } from "../../utils/types";
+import StrapiImage from "../StrapiImage.astro";
+
+interface Props {
+  data: FeaturedDestinationsProps;
+}
+
+const {
+  data: { title, content, destinations = [] },
+} = Astro.props;
+---
+
+<section>
+  <div class="mx-auto container px-6 py-20">
+    <div class="flex flex-col gap-8 lg:flex-row lg:gap-6 lg:items-start">
+      <!-- Left: heading + description -->
+      <div class="shrink-0 lg:w-[380px]">
+        {
+          title && (
+            <h2 class="text-h2 font-bold font-heading text-secondary mb-8 leading-tight">
+              {title}
+            </h2>
+          )
+        }
+        {
+          content && (
+            <p class="text-body-l text-muted leading-relaxed">{content}</p>
+          )
+        }
+      </div>
+
+      <!-- Right: Embla slider -->
+      <div class="min-w-0 flex-1" data-dest-slider>
+        <div class="overflow-x-hidden overflow-y-visible" data-dest-viewport>
+          <div class="flex gap-6">
+            {
+              destinations.map((destination) => (
+                <div class="flex-none w-[260px] max-[640px]:w-[75vw]">
+                  <div class="transition-transform duration-300 hover:-translate-y-3 group">
+                    <a
+                      href={`/destinations/${destination.slug}`}
+                      title={destination.title ?? undefined}
+                      class="block no-underline"
+                    >
+                      <div class="relative overflow-hidden rounded-tl-[70px] max-h-[450px]">
+                        {destination.teaserImage ? (
+                          <StrapiImage
+                            class="w-full object-cover block aspect-[7/9]"
+                            src={destination.teaserImage.url}
+                            alt={
+                              destination.teaserImage.alternativeText ||
+                              destination.title ||
+                              ""
+                            }
+                            width={280}
+                            height={400}
+                          />
+                        ) : (
+                          <div class="w-full aspect-[7/9] bg-surface-alt" />
+                        )}
+                        <div class="absolute inset-0 bg-black/35 flex items-end justify-end opacity-0 transition-opacity group-hover:opacity-100">
+                          <span class="flex items-center text-white text-body-s mr-6 mb-6 opacity-0 transition-opacity delay-[50ms] group-hover:opacity-100">
+                            Explore more
+                            <svg
+                              class="w-5 h-5 ml-2 shrink-0"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              aria-hidden="true"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 5l7 7-7 7"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                      <h3 class="text-h6 font-heading font-semibold text-secondary mt-5 leading-snug">
+                        {destination.title}
+                      </h3>
+                    </a>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="flex justify-end gap-3 mt-6">
+          <button
+            class="w-11 h-11 rounded-full flex items-center justify-center bg-border-hover text-secondary border-0 cursor-pointer transition-colors hover:bg-primary-600 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
+            aria-label="Previous destinations"
+            data-dest-prev
+          >
+            <svg
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </button>
+          <button
+            class="w-11 h-11 rounded-full flex items-center justify-center bg-secondary text-white border-0 cursor-pointer transition-colors hover:bg-primary-600 disabled:opacity-40 disabled:cursor-not-allowed"
+            aria-label="Next destinations"
+            data-dest-next
+          >
+            <svg
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import EmblaCarousel from "embla-carousel";
+
+  document
+    .querySelectorAll<HTMLElement>("[data-dest-slider]")
+    .forEach((root) => {
+      const viewport = root.querySelector<HTMLElement>("[data-dest-viewport]");
+      if (!viewport) return;
+
+      const embla = EmblaCarousel(viewport, {
+        loop: false,
+        align: "start",
+        dragFree: true,
+      });
+
+      const prevBtn = root.querySelector<HTMLButtonElement>("[data-dest-prev]");
+      const nextBtn = root.querySelector<HTMLButtonElement>("[data-dest-next]");
+
+      const syncButtons = () => {
+        if (prevBtn) prevBtn.disabled = !embla.canScrollPrev();
+        if (nextBtn) nextBtn.disabled = !embla.canScrollNext();
+      };
+
+      prevBtn?.addEventListener("click", () => embla.scrollPrev());
+      nextBtn?.addEventListener("click", () => embla.scrollNext());
+
+      embla.on("select", syncButtons);
+      embla.on("init", syncButtons);
+      syncButtons();
+    });
+</script>

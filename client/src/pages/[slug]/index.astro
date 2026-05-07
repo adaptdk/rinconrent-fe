@@ -2,32 +2,16 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BlockRenderer from "../../components/blocks/BlockRenderer.astro";
 import PageHeader from "../../components/PageHeader.astro";
-import { getCollection } from "astro:content";
-import { getPageHeader } from "../../utils/loaders";
-
-import type { CollectionEntry } from "astro:content";
-
-type Page = CollectionEntry<"strapiPages">;
+import { getAllPageSlugs, getPageData } from "../../utils/loaders";
 
 export async function getStaticPaths() {
-  const collection = await getCollection("strapiPages");
-
-  function createStaticPaths(articles: Page[]) {
-    return articles.map(article => ({
-      params: { slug: article.data.slug },
-      props: article.data
-    }));
-  }
-
-  return createStaticPaths(collection);
+  const slugs = await getAllPageSlugs();
+  return slugs.map((slug) => ({ params: { slug } }));
 }
 
-
-const { props } = Astro;
-const { title, blocks } = props;
 const { slug } = Astro.params;
-
-const pageHeader = await getPageHeader(slug);
+const page = await getPageData(slug);
+const { title, blocks, pageHeader } = page;
 ---
 
 <BaseLayout>
