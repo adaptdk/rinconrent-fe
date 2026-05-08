@@ -5,6 +5,16 @@
   },
   "options": {},
   "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "text"
+    },
+    "noPadding": {
+      "type": "boolean",
+      "default": false
+    },
     "card": {
       "displayName": "Card",
       "type": "component",

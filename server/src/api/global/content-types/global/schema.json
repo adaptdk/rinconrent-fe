@@ -28,21 +28,6 @@
       "repeatable": false,
       "component": "layout.header"
     },
-    "footer": {
-      "displayName": "Footer",
-      "type": "component",
-      "repeatable": false,
-      "component": "layout.footer"
-    },
-    "contactPhone": {
-      "type": "string"
-    },
-    "contactEmail": {
-      "type": "string"
-    },
-    "contactAddress": {
-      "type": "text"
-    },
     "socialLinks": {
       "type": "component",
       "repeatable": true,
@@ -53,6 +38,18 @@
       "type": "component",
       "repeatable": false,
       "component": "layout.partners"
+    },
+    "support": {
+      "displayName": "Support",
+      "type": "component",
+      "repeatable": false,
+      "component": "layout.support"
+    },
+    "footer": {
+      "displayName": "Footer",
+      "type": "component",
+      "repeatable": false,
+      "component": "layout.footer"
     }
   }
 }

@@ -12,8 +12,12 @@ const blocksPopulate = {
     },
     "blocks.heading-section": true,
     "blocks.card-grid": {
+      fields: ["title", "subtitle", "noPadding"],
       populate: {
-        card: true,
+        card: {
+          fields: ["heading", "text", "icon"],
+          populate: { link: { fields: ["href", "label", "isExternal"] } },
+        },
       },
     },
     "blocks.content-with-image": {
@@ -23,8 +27,10 @@ const blocksPopulate = {
       },
     },
     "blocks.faqs": {
+      fields: ["title", "subtitle"],
       populate: {
-        faq: true,
+        link: { fields: ["href", "label", "isExternal", "isButtonLink", "type"] },
+        faqs: { fields: ["question", "answer"] },
       },
     },
     "blocks.person-card": {
@@ -84,11 +90,46 @@ const blocksPopulate = {
     "blocks.embed-code": {
       fields: ["code"],
     },
+    "blocks.numbers": {
+      fields: ["title", "subtitle"],
+      populate: {
+        numbers: { fields: ["title", "subtitle", "icon"] },
+      },
+    },
+    "blocks.support": {
+      fields: ["title", "subtitle"],
+    },
     "blocks.testimonials": {
       fields: ["title", "content"],
       populate: {
         testimonials: {
           fields: ["content", "author"],
+        },
+      },
+    },
+    "blocks.video-embed": {
+      fields: ["title", "subtitle", "videoType", "youtubeUrl", "twoColumns"],
+      populate: {
+        videoFile: { fields: ["url", "alternativeText", "mime"] },
+      },
+    },
+    "blocks.featured-guides": {
+      fields: ["title", "subtitle", "showPosts"],
+      populate: {
+        readMoreLink: { fields: ["label", "href", "isExternal", "isButtonLink", "type"] },
+        selectedTravelGuides: {
+          fields: ["title", "slug", "description", "publishedAt"],
+          populate: {
+            featuredImage: { fields: ["url", "alternativeText"] },
+            category: { fields: ["title", "slug"] },
+          },
+        },
+        selectedInvestorGuides: {
+          fields: ["title", "slug", "description", "publishedAt"],
+          populate: {
+            featuredImage: { fields: ["url", "alternativeText"] },
+            category: { fields: ["title", "slug"] },
+          },
         },
       },
     },
@@ -161,6 +202,15 @@ async function getGlobalPageData() {
             populate: {
               logo: { fields: ["url", "alternativeText"] },
             },
+          },
+        },
+      },
+      support: {
+        fields: ["contactPhone", "contactEmail", "contactAddress"],
+        populate: {
+          card: {
+            fields: ["heading", "text", "icon"],
+            populate: { link: { fields: ["href", "label", "isExternal"] } },
           },
         },
       },
@@ -276,7 +326,7 @@ async function getSeoConfig(locale = "en"): Promise<{
 const guidesBlocksPopulate = {
   on: {
     "blocks.markdown": true,
-    "blocks.faqs": { populate: { faq: true } },
+    "blocks.faqs": { fields: ["title", "subtitle"], populate: { faqs: { fields: ["question", "answer"] } } },
     "blocks.heading-section": true,
   },
 };
@@ -351,8 +401,77 @@ async function getInvestorGuideCategories(locale = "en") {
   return (data?.data ?? []) as any[];
 }
 
+const guideCardPopulate = {
+  fields: ["title", "slug", "description", "publishedAt"],
+  populate: {
+    featuredImage: { fields: ["url", "alternativeText"] },
+    category: { fields: ["title", "slug"] },
+  },
+};
+
+async function fetchLatestFromCollection(collectionName: string, locale = "en") {
+  const data = await strapiClient.collection(collectionName).find({
+    locale,
+    ...guideCardPopulate,
+    sort: ["publishedAt:desc"],
+    pagination: { limit: 3 },
+  } as any);
+  return (data?.data ?? []) as any[];
+}
+
+async function getLatestGuides(
+  mode: "latest_both" | "latest_travel" | "latest_investor",
+  locale = "en"
+) {
+  if (mode === "latest_travel") {
+    const raw = await fetchLatestFromCollection("travel-guides", locale);
+    return raw.map((g: any) => ({ ...g, _source: "travel" as const }));
+  }
+  if (mode === "latest_investor") {
+    const raw = await fetchLatestFromCollection("investor-guides", locale);
+    return raw.map((g: any) => ({ ...g, _source: "investor" as const }));
+  }
+  const [travel, investor] = await Promise.all([
+    fetchLatestFromCollection("travel-guides", locale),
+    fetchLatestFromCollection("investor-guides", locale),
+  ]);
+  const merged = [
+    ...travel.map((g: any) => ({ ...g, _source: "travel" as const })),
+    ...investor.map((g: any) => ({ ...g, _source: "investor" as const })),
+  ];
+  merged.sort((a, b) => {
+    const da = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
+    const db = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+    return db - da;
+  });
+  return merged.slice(0, 3);
+}
+
+async function getSupportCards(): Promise<{ heading: string; text?: string | null; icon?: string | null; link?: { href: string; label?: string; isExternal?: boolean } | null }[]> {
+  try {
+    const data = await getSingleType("global", {
+      fields: [],
+      populate: {
+        support: {
+          fields: [],
+          populate: {
+            card: {
+              fields: ["heading", "text", "icon"],
+              populate: { link: { fields: ["href", "label", "isExternal"] } },
+            },
+          },
+        },
+      },
+    });
+    return (data?.data as any)?.support?.card ?? [];
+  } catch {
+    return [];
+  }
+}
+
 export {
   getGlobalPageData,
+  getSupportCards,
   getLandingPageData,
   getPageHeader,
   getAllPageSlugs,
@@ -366,4 +485,5 @@ export {
   getAllInvestorGuideSlugs,
   getInvestorGuideData,
   getInvestorGuideCategories,
+  getLatestGuides,
 };

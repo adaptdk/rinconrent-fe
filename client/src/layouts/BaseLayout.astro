@@ -9,7 +9,7 @@ import Footer from "../components/Footer.astro";
 import Partners from "../components/Partners.astro";
 
 const data = await getGlobalPageData();
-const { header, banner, footer, contactPhone, contactEmail, contactAddress, socialLinks, partners } = data;
+const { header, banner, footer, support, socialLinks, partners } = data;
 ---
 
 <!doctype html>
@@ -21,6 +21,7 @@ const { header, banner, footer, contactPhone, contactEmail, contactAddress, soci
     <Font cssVariable="--font-cormorant" preload />
     <Font cssVariable="--font-proza" preload />
     <meta name="generator" content={Astro.generator} />
+    <script src="https://kit.fontawesome.com/fcc9f7299e.js" crossorigin="anonymous"></script>
     <title>Astro + Strapi</title>
     <meta name="description" content="A modern Astro and Strapi example project" />
   </head>
@@ -31,6 +32,6 @@ const { header, banner, footer, contactPhone, contactEmail, contactAddress, soci
       <slot />
     </main>
     { partners && <Partners data={partners} /> }
-    { footer && <Footer footer={footer} {contactPhone} {contactEmail} {contactAddress} {socialLinks} /> }
+    { footer && <Footer footer={footer} contactPhone={support?.contactPhone} contactEmail={support?.contactEmail} contactAddress={support?.contactAddress} {socialLinks} /> }
   </body>
 </html>

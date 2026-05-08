@@ -61,10 +61,6 @@ async function main() {
   await app.documents('api::global.global').update({
     documentId: global.documentId,
     data: {
-      // Global-level contact + social (accessible from any page)
-      contactPhone: '+34 952 472 429',
-      contactEmail: 'info@rinconrent.com',
-      contactAddress: 'Centro Idea, Carretera de Mijas, km 3.6, 29650 Mijas (Málaga)',
       socialLinks: [
         { platform: 'LINKEDIN', href: 'https://www.linkedin.com/company/rinc%C3%B3n-rent/', label: 'LinkedIn' },
         { platform: 'FACEBOOK', href: 'https://www.facebook.com/RinconRentEU', label: 'Facebook' },

@@ -1,0 +1,49 @@
+---
+import type { NumbersProps } from "../../utils/types";
+
+interface Props {
+  data: NumbersProps;
+}
+
+const { data: { title, subtitle, numbers = [] } } = Astro.props;
+---
+
+<section>
+  <div class="mx-auto container px-6 py-20">
+    {(title || subtitle) && (
+      <div class="mb-12">
+        {title && (
+          <h2 class="text-h2 font-bold font-heading text-secondary leading-tight">
+            {title}
+          </h2>
+        )}
+        {subtitle && (
+          <p class="mt-4 text-body-l text-muted">{subtitle}</p>
+        )}
+      </div>
+    )}
+
+    {numbers.length > 0 && (
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {numbers.map((item) => (
+          <div class="numbers__card relative overflow-hidden rounded-xl py-12 px-8">
+            {item.icon && (
+              <i
+                class:list={[item.icon, "numbers__icon absolute top-4 left-[30%] -translate-x-1/2 text-[100px] lg:text-[140px] text-beige z-[1] pointer-events-none select-none"]}
+                aria-hidden="true"
+              ></i>
+            )}
+            <div class="relative z-10">
+              <div class="text-h4 lg:text-h2 font-bold font-body text-secondary mb-2 leading-tight">
+                {item.title}
+              </div>
+              {item.subtitle && (
+                <div class="text-body-l text-muted">{item.subtitle}</div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</section>

@@ -1,4 +1,5 @@
 ---
+import { marked } from "marked";
 import Faq from "../Faq.astro";
 import type { FaqsProps } from "../../utils/types";
 
@@ -6,15 +7,75 @@ interface Props {
   data: FaqsProps;
 }
 
-const { data: { faq } } = Astro.props;
+const { data: { title, subtitle, link, faqs = [] } } = Astro.props;
+
+const INITIAL_VISIBLE = 5;
+const hasMore = faqs.length > INITIAL_VISIBLE;
 ---
 
 <section>
-  <div class="mx-auto max-w-3xl px-6 py-16">
-    <ul class="space-y-3">
-      {faq.map(faq => (
-        <Faq question={faq.heading} answer={faq.text} />
-      ))}
-    </ul>
+  <div class="mx-auto max-w-6xl px-6 py-16">
+    <div class="flex flex-wrap items-start gap-x-16 gap-y-10 md:flex-nowrap">
+
+      {(title || subtitle) && (
+        <div class="w-full shrink-0 md:w-72 lg:w-80">
+          {title && (
+            <h2 class="font-heading text-h2 font-bold text-secondary mb-4">{title}</h2>
+          )}
+          {subtitle && (
+            <p class="text-body-l text-muted">{subtitle}</p>
+          )}
+          {link?.href && (
+            <a
+              href={link.href}
+              target={link.isExternal ? "_blank" : undefined}
+              rel={link.isExternal ? "noopener noreferrer" : undefined}
+              class:list={["mt-6 inline-block button", link.type === "SECONDARY" ? "button-secondary" : "button-primary"]}
+            >
+              {link.label}
+            </a>
+          )}
+        </div>
+      )}
+
+      <div
+        class="w-full"
+        itemscope
+        itemtype="https://schema.org/FAQPage"
+      >
+        {faqs.length > 0 && (
+          <div class="flex flex-col gap-2">
+            {faqs.map((faq, i) => (
+              <Faq
+                question={faq.question}
+                answer={marked(faq.answer) as string}
+                hidden={i >= INITIAL_VISIBLE}
+              />
+            ))}
+          </div>
+        )}
+
+        {hasMore && (
+          <button
+            class="faq-show-more mt-6 self-end font-body font-semibold text-secondary underline-offset-2 hover:underline"
+            type="button"
+          >
+            Show more
+          </button>
+        )}
+      </div>
+
+    </div>
   </div>
 </section>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>(".faq-show-more");
+  if (btn) {
+    const items = document.querySelectorAll<HTMLElement>(".faq-hidden");
+    btn.addEventListener("click", () => {
+      items.forEach(el => el.classList.remove("faq-hidden"));
+      btn.remove();
+    });
+  }
+</script>

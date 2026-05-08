@@ -13,7 +13,9 @@
     "seed:workshop": "node scripts/seed-workshop.js",
     "seed:community": "node scripts/seed-community.js",
     "seed:product": "node scripts/seed-product.js",
-    "seed:guides": "node scripts/seed-guides.js"
+    "seed:guides": "node scripts/seed-guides.js",
+    "seed:faqs": "node scripts/seed-faqs.js",
+    "seed:support": "node scripts/seed-support.js"
   },
   "dependencies": {
     "@strapi/plugin-cloud": "5.41.1",

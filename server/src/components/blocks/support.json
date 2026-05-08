@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_blocks_supports",
+  "info": {
+    "displayName": "Support"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "text"
+    }
+  }
+}

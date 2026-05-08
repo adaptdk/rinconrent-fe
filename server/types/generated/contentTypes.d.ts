@@ -540,6 +540,12 @@ export interface ApiDestinationDestination extends Struct.CollectionTypeSchema {
         'blocks.featured-articles',
         'blocks.community-links',
         'blocks.featured-workshops',
+        'blocks.featured-destinations',
+        'blocks.testimonials',
+        'blocks.embed-code',
+        'blocks.numbers',
+        'blocks.featured-guides',
+        'blocks.support',
       ]
     >;
     createdAt: Schema.Attribute.DateTime;
@@ -577,6 +583,33 @@ export interface ApiDestinationDestination extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiFaqFaq extends Struct.CollectionTypeSchema {
+  collectionName: 'faqs';
+  info: {
+    displayName: 'FAQ';
+    pluralName: 'faqs';
+    singularName: 'faq';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    answer: Schema.Attribute.RichText;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::faq.faq'> &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    question: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   collectionName: 'globals';
   info: {
@@ -590,9 +623,6 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   };
   attributes: {
     banner: Schema.Attribute.Component<'layout.banner', false>;
-    contactAddress: Schema.Attribute.Text;
-    contactEmail: Schema.Attribute.String;
-    contactPhone: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -608,6 +638,7 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
     partners: Schema.Attribute.Component<'layout.partners', false>;
     publishedAt: Schema.Attribute.DateTime;
     socialLinks: Schema.Attribute.Component<'shared.social-link', true>;
+    support: Schema.Attribute.Component<'layout.support', false>;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -755,9 +786,15 @@ export interface ApiLandingPageLandingPage extends Struct.SingleTypeSchema {
         'blocks.markdown',
         'blocks.featured-articles',
         'blocks.newsletter',
+        'blocks.community-links',
+        'blocks.featured-workshops',
         'blocks.featured-destinations',
         'blocks.testimonials',
         'blocks.embed-code',
+        'blocks.numbers',
+        'blocks.featured-guides',
+        'blocks.support',
+        'blocks.video-embed',
       ]
     >;
     createdAt: Schema.Attribute.DateTime;
@@ -806,6 +843,10 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         'blocks.featured-destinations',
         'blocks.testimonials',
         'blocks.embed-code',
+        'blocks.numbers',
+        'blocks.featured-guides',
+        'blocks.support',
+        'blocks.video-embed',
       ]
     >;
     createdAt: Schema.Attribute.DateTime;
@@ -1643,6 +1684,7 @@ declare module '@strapi/strapi' {
       'api::article.article': ApiArticleArticle;
       'api::author.author': ApiAuthorAuthor;
       'api::destination.destination': ApiDestinationDestination;
+      'api::faq.faq': ApiFaqFaq;
       'api::global.global': ApiGlobalGlobal;
       'api::investor-guide-category.investor-guide-category': ApiInvestorGuideCategoryInvestorGuideCategory;
       'api::investor-guide.investor-guide': ApiInvestorGuideInvestorGuide;

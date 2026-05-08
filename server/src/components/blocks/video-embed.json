@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_blocks_video_embeds",
+  "info": {
+    "displayName": "Video Embed"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "text"
+    },
+    "videoType": {
+      "type": "enumeration",
+      "enum": ["youtube", "upload"],
+      "default": "youtube"
+    },
+    "youtubeUrl": {
+      "type": "string"
+    },
+    "videoFile": {
+      "allowedTypes": ["videos"],
+      "type": "media",
+      "multiple": false
+    },
+    "twoColumns": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "collectionName": "components_blocks_featured_guides",
+  "info": {
+    "displayName": "Featured Guides"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "readMoreLink": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.link"
+    },
+    "showPosts": {
+      "type": "enumeration",
+      "enum": ["latest_both", "latest_travel", "latest_investor", "selected"],
+      "default": "latest_both"
+    },
+    "selectedTravelGuides": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::travel-guide.travel-guide"
+    },
+    "selectedInvestorGuides": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::investor-guide.investor-guide"
+    }
+  }
+}

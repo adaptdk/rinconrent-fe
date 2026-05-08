@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_blocks_number_items",
+  "info": {
+    "displayName": "Number Item"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    }
+  }
+}

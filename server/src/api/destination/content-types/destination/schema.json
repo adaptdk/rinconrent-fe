@@ -58,7 +58,13 @@
         "blocks.markdown",
         "blocks.featured-articles",
         "blocks.community-links",
-        "blocks.featured-workshops"
+        "blocks.featured-workshops",
+        "blocks.featured-destinations",
+        "blocks.testimonials",
+        "blocks.embed-code",
+        "blocks.numbers",
+        "blocks.featured-guides",
+        "blocks.support"
       ]
     }
   }

@@ -7,6 +7,9 @@ export interface BlocksCardGrid extends Struct.ComponentSchema {
   };
   attributes: {
     card: Schema.Attribute.Component<'shared.card', true>;
+    noPadding: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    subtitle: Schema.Attribute.Text;
+    title: Schema.Attribute.String;
   };
 }
 
@@ -55,7 +58,10 @@ export interface BlocksFaqs extends Struct.ComponentSchema {
     displayName: 'Faqs';
   };
   attributes: {
-    faq: Schema.Attribute.Component<'shared.card', true>;
+    faqs: Schema.Attribute.Relation<'oneToMany', 'api::faq.faq'>;
+    link: Schema.Attribute.Component<'shared.link', false>;
+    subtitle: Schema.Attribute.Text;
+    title: Schema.Attribute.String;
   };
 }
 
@@ -80,6 +86,30 @@ export interface BlocksFeaturedDestinations extends Struct.ComponentSchema {
       'oneToMany',
       'api::destination.destination'
     >;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface BlocksFeaturedGuides extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_featured_guides';
+  info: {
+    displayName: 'Featured Guides';
+  };
+  attributes: {
+    readMoreLink: Schema.Attribute.Component<'shared.link', false>;
+    selectedInvestorGuides: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::investor-guide.investor-guide'
+    >;
+    selectedTravelGuides: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::travel-guide.travel-guide'
+    >;
+    showPosts: Schema.Attribute.Enumeration<
+      ['latest_both', 'latest_travel', 'latest_investor', 'selected']
+    > &
+      Schema.Attribute.DefaultTo<'latest_both'>;
+    subtitle: Schema.Attribute.String;
     title: Schema.Attribute.String;
   };
 }
@@ -149,6 +179,30 @@ export interface BlocksNewsletter extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksNumberItem extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_number_items';
+  info: {
+    displayName: 'Number Item';
+  };
+  attributes: {
+    icon: Schema.Attribute.String;
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface BlocksNumbers extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_numbers';
+  info: {
+    displayName: 'Numbers';
+  };
+  attributes: {
+    numbers: Schema.Attribute.Component<'blocks.number-item', true>;
+    subtitle: Schema.Attribute.Text;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface BlocksPersonCard extends Struct.ComponentSchema {
   collectionName: 'components_blocks_person_cards';
   info: {
@@ -159,6 +213,17 @@ export interface BlocksPersonCard extends Struct.ComponentSchema {
     personJob: Schema.Attribute.String;
     personName: Schema.Attribute.String;
     text: Schema.Attribute.Text;
+  };
+}
+
+export interface BlocksSupport extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_supports';
+  info: {
+    displayName: 'Support';
+  };
+  attributes: {
+    subtitle: Schema.Attribute.Text;
+    title: Schema.Attribute.String;
   };
 }
 
@@ -175,6 +240,22 @@ export interface BlocksTestimonials extends Struct.ComponentSchema {
       'api::testimonial.testimonial'
     >;
     title: Schema.Attribute.String;
+  };
+}
+
+export interface BlocksVideoEmbed extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_video_embeds';
+  info: {
+    displayName: 'Video Embed';
+  };
+  attributes: {
+    subtitle: Schema.Attribute.Text;
+    title: Schema.Attribute.String;
+    twoColumns: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    videoFile: Schema.Attribute.Media<'videos'>;
+    videoType: Schema.Attribute.Enumeration<['youtube', 'upload']> &
+      Schema.Attribute.DefaultTo<'youtube'>;
+    youtubeUrl: Schema.Attribute.String;
   };
 }
 
@@ -255,13 +336,34 @@ export interface LayoutPartners extends Struct.ComponentSchema {
   };
 }
 
+export interface LayoutSupport extends Struct.ComponentSchema {
+  collectionName: 'components_layout_supports';
+  info: {
+    displayName: 'Support';
+  };
+  attributes: {
+    card: Schema.Attribute.Component<'shared.card', true> &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 3;
+        },
+        number
+      >;
+    contactAddress: Schema.Attribute.Text;
+    contactEmail: Schema.Attribute.String;
+    contactPhone: Schema.Attribute.String;
+  };
+}
+
 export interface SharedCard extends Struct.ComponentSchema {
   collectionName: 'components_shared_cards';
   info: {
     displayName: 'Card';
   };
   attributes: {
-    heading: Schema.Attribute.String;
+    heading: Schema.Attribute.String & Schema.Attribute.Required;
+    icon: Schema.Attribute.String;
+    link: Schema.Attribute.Component<'shared.link', false>;
     text: Schema.Attribute.Text;
   };
 }
@@ -371,18 +473,24 @@ declare module '@strapi/strapi' {
       'blocks.faqs': BlocksFaqs;
       'blocks.featured-articles': BlocksFeaturedArticles;
       'blocks.featured-destinations': BlocksFeaturedDestinations;
+      'blocks.featured-guides': BlocksFeaturedGuides;
       'blocks.featured-workshops': BlocksFeaturedWorkshops;
       'blocks.heading-section': BlocksHeadingSection;
       'blocks.hero': BlocksHero;
       'blocks.markdown': BlocksMarkdown;
       'blocks.newsletter': BlocksNewsletter;
+      'blocks.number-item': BlocksNumberItem;
+      'blocks.numbers': BlocksNumbers;
       'blocks.person-card': BlocksPersonCard;
+      'blocks.support': BlocksSupport;
       'blocks.testimonials': BlocksTestimonials;
+      'blocks.video-embed': BlocksVideoEmbed;
       'layout.banner': LayoutBanner;
       'layout.footer': LayoutFooter;
       'layout.header': LayoutHeader;
       'layout.page-header': LayoutPageHeader;
       'layout.partners': LayoutPartners;
+      'layout.support': LayoutSupport;
       'shared.card': SharedCard;
       'shared.community-link': SharedCommunityLink;
       'shared.footer-menu': SharedFooterMenu;

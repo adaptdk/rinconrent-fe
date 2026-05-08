@@ -76,14 +76,18 @@ const blockSchema = z.discriminatedUnion("__component", [
   z.object({
     ...blockBase,
     __component: z.literal("blocks.card-grid"),
+    title: z.string().nullable().optional(),
+    subtitle: z.string().nullable().optional(),
+    noPadding: z.boolean().nullable().optional(),
     card: z.array(
       z.object({
         id: z.number().optional(),
         heading: z.string(),
-        text: z.string(),
-        image: imageSchema.optional(),
+        text: z.string().nullable().optional(),
+        icon: z.string().nullable().optional(),
+        link: linkSchema.nullable().optional(),
       })
-    ),
+    ).optional(),
   }),
   z.object({
     ...blockBase,
@@ -97,12 +101,17 @@ const blockSchema = z.discriminatedUnion("__component", [
   z.object({
     ...blockBase,
     __component: z.literal("blocks.faqs"),
-    faq: z.array(
+    title: z.string().nullable().optional(),
+    subtitle: z.string().nullable().optional(),
+    link: linkSchema.nullable().optional(),
+    faqs: z.array(
       z.object({
-        heading: z.string(),
-        text: z.string(),
+        id: z.number().optional(),
+        documentId: z.string().optional(),
+        question: z.string(),
+        answer: z.string(),
       })
-    ),
+    ).optional(),
   }),
   z.object({
     ...blockBase,
@@ -202,6 +211,20 @@ const blockSchema = z.discriminatedUnion("__component", [
   }),
   z.object({
     ...blockBase,
+    __component: z.literal("blocks.numbers"),
+    title: z.string().nullable().optional(),
+    subtitle: z.string().nullable().optional(),
+    numbers: z.array(
+      z.object({
+        id: z.number().optional(),
+        title: z.string(),
+        subtitle: z.string().nullable().optional(),
+        icon: z.string().nullable().optional(),
+      })
+    ).optional(),
+  }),
+  z.object({
+    ...blockBase,
     __component: z.literal("blocks.testimonials"),
     title: z.string().nullable().optional(),
     content: z.string().nullable().optional(),
@@ -211,6 +234,68 @@ const blockSchema = z.discriminatedUnion("__component", [
         documentId: z.string().optional(),
         content: z.string(),
         author: z.string(),
+      })
+    ).optional(),
+  }),
+  z.object({
+    ...blockBase,
+    __component: z.literal("blocks.support"),
+    title: z.string().nullable().optional(),
+    subtitle: z.string().nullable().optional(),
+  }),
+  z.object({
+    ...blockBase,
+    __component: z.literal("blocks.video-embed"),
+    title: z.string().nullable().optional(),
+    subtitle: z.string().nullable().optional(),
+    videoType: z.enum(["youtube", "upload"]).optional(),
+    youtubeUrl: z.string().nullable().optional(),
+    videoFile: z.object({
+      url: z.string(),
+      alternativeText: z.string().nullable().optional(),
+      mime: z.string().optional(),
+    }).nullable().optional(),
+    twoColumns: z.boolean().nullable().optional(),
+  }),
+  z.object({
+    ...blockBase,
+    __component: z.literal("blocks.featured-guides"),
+    title: z.string().nullable().optional(),
+    subtitle: z.string().nullable().optional(),
+    readMoreLink: linkSchema.nullable().optional(),
+    showPosts: z.enum(["latest_both", "latest_travel", "latest_investor", "selected"]).nullable().optional(),
+    selectedTravelGuides: z.array(
+      z.object({
+        id: z.number().optional(),
+        documentId: z.string().optional(),
+        title: z.string(),
+        slug: z.string(),
+        description: z.string().nullable().optional(),
+        publishedAt: z.string().nullable().optional(),
+        featuredImage: imageSchema.nullable().optional(),
+        category: z.object({
+          id: z.number().optional(),
+          documentId: z.string().optional(),
+          title: z.string(),
+          slug: z.string(),
+        }).nullable().optional(),
+      })
+    ).optional(),
+    selectedInvestorGuides: z.array(
+      z.object({
+        id: z.number().optional(),
+        documentId: z.string().optional(),
+        title: z.string(),
+        slug: z.string(),
+        description: z.string().nullable().optional(),
+        publishedAt: z.string().nullable().optional(),
+        featuredImage: imageSchema.nullable().optional(),
+        category: z.object({
+          id: z.number().optional(),
+          documentId: z.string().optional(),
+          title: z.string(),
+          slug: z.string(),
+        }).nullable().optional(),
       })
     ).optional(),
   }),
@@ -233,8 +318,12 @@ const blocksPopulate = {
       fields: ["heading", "subHeading", "anchorLink"],
     },
     "blocks.card-grid": {
+      fields: ["title", "subtitle", "noPadding"],
       populate: {
-        card: { fields: ["heading", "text"] },
+        card: {
+          fields: ["heading", "text", "icon"],
+          populate: { link: { fields: ["href", "label", "isExternal"] } },
+        },
       },
     },
     "blocks.content-with-image": {
@@ -245,8 +334,10 @@ const blocksPopulate = {
       },
     },
     "blocks.faqs": {
+      fields: ["title", "subtitle"],
       populate: {
-        faq: { fields: ["heading", "text"] },
+        link: { fields: ["href", "label", "isExternal", "isButtonLink", "type"] },
+        faqs: { fields: ["question", "answer"] },
       },
     },
     "blocks.person-card": {
@@ -307,11 +398,46 @@ const blocksPopulate = {
     "blocks.embed-code": {
       fields: ["code"],
     },
+    "blocks.numbers": {
+      fields: ["title", "subtitle"],
+      populate: {
+        numbers: { fields: ["title", "subtitle", "icon"] },
+      },
+    },
+    "blocks.support": {
+      fields: ["title", "subtitle"],
+    },
     "blocks.testimonials": {
       fields: ["title", "content"],
       populate: {
         testimonials: {
           fields: ["content", "author"],
+        },
+      },
+    },
+    "blocks.video-embed": {
+      fields: ["title", "subtitle", "videoType", "youtubeUrl", "twoColumns"],
+      populate: {
+        videoFile: { fields: ["url", "alternativeText", "mime"] },
+      },
+    },
+    "blocks.featured-guides": {
+      fields: ["title", "subtitle", "showPosts"],
+      populate: {
+        readMoreLink: { fields: ["label", "href", "isExternal", "isButtonLink", "type"] },
+        selectedTravelGuides: {
+          fields: ["title", "slug", "description", "publishedAt"],
+          populate: {
+            featuredImage: { fields: ["url", "alternativeText"] },
+            category: { fields: ["title", "slug"] },
+          },
+        },
+        selectedInvestorGuides: {
+          fields: ["title", "slug", "description", "publishedAt"],
+          populate: {
+            featuredImage: { fields: ["url", "alternativeText"] },
+            category: { fields: ["title", "slug"] },
+          },
         },
       },
     },
@@ -474,8 +600,10 @@ const guideBlocksPopulate = {
       fields: ["content"],
     },
     "blocks.faqs": {
+      fields: ["title", "subtitle"],
       populate: {
-        faq: { fields: ["heading", "text"] },
+        link: { fields: ["href", "label", "isExternal", "isButtonLink", "type"] },
+        faqs: { fields: ["question", "answer"] },
       },
     },
     "blocks.heading-section": {
@@ -495,13 +623,17 @@ const guideBlockSchema = z.discriminatedUnion("__component", [
   z.object({
     ...blockBase,
     __component: z.literal("blocks.faqs"),
-    faq: z.array(
+    title: z.string().nullable().optional(),
+    subtitle: z.string().nullable().optional(),
+    link: linkSchema.nullable().optional(),
+    faqs: z.array(
       z.object({
         id: z.number().optional(),
-        heading: z.string(),
-        text: z.string(),
+        documentId: z.string().optional(),
+        question: z.string(),
+        answer: z.string(),
       })
-    ),
+    ).optional(),
   }),
   z.object({
     ...blockBase,

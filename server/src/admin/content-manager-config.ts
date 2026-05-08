@@ -36,6 +36,47 @@ export const COMPONENT_CONFIGS: Record<string, ComponentConfig> = {
       },
     },
   },
+  "blocks.card-grid": {
+    fields: {
+      title: {
+        label: "Section heading",
+        description: "Large heading displayed above the card grid.",
+      },
+      subtitle: {
+        label: "Section description",
+        description: "Supporting text shown below the heading.",
+      },
+      noPadding: {
+        label: "Remove card padding & background",
+        description: "Turn on to display cards as plain content without the white box, border, and shadow.",
+      },
+      card: {
+        label: "Cards",
+        description: "Add one card per feature, benefit, or item.",
+      },
+    },
+  },
+  "shared.card": {
+    mainField: "heading",
+    fields: {
+      heading: {
+        label: "Title",
+        description: "Card heading — keep it short and punchy.",
+      },
+      text: {
+        label: "Description",
+        description: "Short supporting text shown below the title.",
+      },
+      icon: {
+        label: "Icon (Font Awesome class)",
+        description: "Full Font Awesome class string, e.g. 'fa-solid fa-star' or 'fa-solid fa-chart-bar'.",
+      },
+      link: {
+        label: "Link",
+        description: "Optional link shown below the description (e.g. email, phone, or a page URL). Max 1.",
+      },
+    },
+  },
   "blocks.content-with-image": {
     fields: {
       heading: {
@@ -97,6 +138,147 @@ export const COMPONENT_CONFIGS: Record<string, ComponentConfig> = {
       testimonials: {
         label: "Testimonials",
         description: "Select testimonials to display in the slider.",
+      },
+    },
+  },
+  "blocks.numbers": {
+    fields: {
+      title: {
+        label: "Section heading",
+        description: "Large heading displayed above the stats grid.",
+      },
+      subtitle: {
+        label: "Section description",
+        description: "Supporting text shown below the heading.",
+      },
+      numbers: {
+        label: "Stats",
+        description: "Each stat card shows a large number/title, a subtitle, and a decorative icon.",
+      },
+    },
+  },
+  "blocks.number-item": {
+    fields: {
+      title: {
+        label: "Stat",
+        description: "The main stat or number, e.g. '300+' or '$2M'.",
+      },
+      subtitle: {
+        label: "Label",
+        description: "Short description shown below the stat.",
+      },
+      icon: {
+        label: "Icon (Font Awesome class)",
+        description: "Full Font Awesome class string, e.g. 'fa-solid fa-chart-bar' or 'fa-solid fa-users'. Used as a decorative watermark.",
+      },
+    },
+  },
+  "blocks.faqs": {
+    fields: {
+      title: {
+        label: "Section heading",
+        description: "Large heading displayed on the left side of the section.",
+      },
+      subtitle: {
+        label: "Section description",
+        description: "Supporting text shown below the heading.",
+      },
+      link: {
+        label: "Button",
+        description: "Optional call-to-action button shown below the description.",
+      },
+      faqs: {
+        label: "FAQ items",
+        description: "Search and select FAQ entries to display in the accordion.",
+      },
+    },
+  },
+  "blocks.support": {
+    fields: {
+      title: {
+        label: "Section heading",
+        description: "Heading displayed above the support cards.",
+      },
+      subtitle: {
+        label: "Section description",
+        description: "Supporting text shown below the heading.",
+      },
+    },
+  },
+  "layout.support": {
+    fields: {
+      contactPhone: {
+        label: "Phone number",
+        description: "Displayed in the footer. Include country code, e.g. +1 555 123 4567.",
+      },
+      contactEmail: {
+        label: "Email address",
+        description: "Displayed in the footer as a mailto link.",
+      },
+      contactAddress: {
+        label: "Address",
+        description: "Physical address displayed in the footer.",
+      },
+      card: {
+        label: "Get in touch cards",
+        description: "Up to 3 cards shown in the Support block. Each card has a title, description, and optional FA icon.",
+      },
+    },
+  },
+  "blocks.featured-guides": {
+    fields: {
+      title: {
+        label: "Section heading",
+        description: "Large heading displayed above the guide cards.",
+      },
+      subtitle: {
+        label: "Section description",
+        description: "Supporting text shown below the heading.",
+      },
+      readMoreLink: {
+        label: "View all button",
+        description: "Optional CTA linking to the guides listing page.",
+      },
+      showPosts: {
+        label: "Which guides to show",
+        description:
+          "latest_both — 3 newest across both types. latest_travel — 3 newest travel guides. latest_investor — 3 newest investor guides. selected — manually pick below.",
+      },
+      selectedTravelGuides: {
+        label: "Selected travel guides",
+        description: "Only used when 'Which guides to show' is set to 'selected'.",
+      },
+      selectedInvestorGuides: {
+        label: "Selected investor guides",
+        description: "Only used when 'Which guides to show' is set to 'selected'.",
+      },
+    },
+  },
+  "blocks.video-embed": {
+    fields: {
+      title: {
+        label: "Title",
+        description: "Heading displayed above or beside the video.",
+      },
+      subtitle: {
+        label: "Subtitle",
+        description: "Supporting text shown below the title.",
+      },
+      videoType: {
+        label: "Video source",
+        description: "youtube — paste a YouTube URL below. upload — upload a video file.",
+      },
+      youtubeUrl: {
+        label: "YouTube URL",
+        description: "Only used when Video source is set to 'youtube'. Paste the full watch URL (e.g. https://www.youtube.com/watch?v=...).",
+      },
+      videoFile: {
+        label: "Video file",
+        description: "Only used when Video source is set to 'upload'.",
+      },
+      twoColumns: {
+        label: "Two-column layout",
+        description: "On: title and subtitle sit on the left, video on the right. Off: title and subtitle appear above the video full-width (max 6xl).",
       },
     },
   },
@@ -197,6 +379,23 @@ export const CONTENT_TYPE_CONFIGS: Record<string, ContentTypeConfig> = {
       },
       blocks: {
         label: "Content blocks",
+      },
+    },
+  },
+  "api::faq.faq": {
+    mainField: "question",
+    fields: {
+      title: {
+        label: "Internal title",
+        description: "Used only in the admin to identify this FAQ entry — not shown on the site.",
+      },
+      question: {
+        label: "Question",
+        description: "The FAQ question shown as the accordion heading.",
+      },
+      answer: {
+        label: "Answer",
+        description: "The full answer. Supports rich text — headings, bold, lists, links.",
       },
     },
   },
@@ -339,5 +538,6 @@ interface ComponentConfig {
 }
 
 interface ContentTypeConfig {
+  mainField?: string;
   fields: Record<string, FieldConfig>;
 }

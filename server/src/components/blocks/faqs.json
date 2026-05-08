@@ -5,10 +5,21 @@
   },
   "options": {},
   "attributes": {
-    "faq": {
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "text"
+    },
+    "link": {
       "type": "component",
-      "repeatable": true,
-      "component": "shared.card"
+      "repeatable": false,
+      "component": "shared.link"
+    },
+    "faqs": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::faq.faq"
     }
   }
 }

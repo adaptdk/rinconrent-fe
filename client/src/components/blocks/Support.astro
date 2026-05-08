@@ -1,0 +1,72 @@
+---
+import type { SupportProps } from "../../utils/types";
+import { getSupportCards } from "../../utils/loaders";
+
+interface Props {
+  data: SupportProps;
+}
+
+const {
+  data: { title, subtitle },
+} = Astro.props;
+const cards = await getSupportCards();
+---
+
+<section>
+  <div class="mx-auto container px-6 py-16">
+    {
+      (title || subtitle) && (
+        <div class="mb-10">
+          {title && (
+            <h2 class="text-h2 font-bold font-heading text-secondary leading-tight mb-5">
+              {title}
+            </h2>
+          )}
+          {subtitle && (
+            <p class="text-body-l text-muted leading-relaxed">{subtitle}</p>
+          )}
+        </div>
+      )
+    }
+
+    {
+      cards.length > 0 && (
+        <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {cards.map((item) => (
+            <div class="card-grid__item">
+              <div class="flex items-center gap-6 mb-3 lg:flex-col lg:items-start lg:mb-0">
+                {item.icon && (
+                  <div class="bg-gray-blue rounded-tl-[15px] rounded-br-[15px] p-2 inline-block text-white shrink-0">
+                    <i
+                      class:list={[
+                        item.icon,
+                        "inline-flex w-8 h-8 text-h6 items-center justify-center",
+                      ]}
+                      aria-hidden="true"
+                    />
+                  </div>
+                )}
+                <h3 class="font-semibold font-body text-h6 text-secondary mb-0 lg:mb-3">
+                  {item.heading}
+                </h3>
+              </div>
+              {item.text && (
+                <p class="text-body text-muted leading-relaxed">{item.text}</p>
+              )}
+              {item.link && (
+                <a
+                  href={item.link.href}
+                  class="mt-2 inline-block text-body-s font-semibold text-secondary"
+                  target={item.link.isExternal ? "_blank" : undefined}
+                  rel={item.link.isExternal ? "noopener noreferrer" : undefined}
+                >
+                  {item.link.label}
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>

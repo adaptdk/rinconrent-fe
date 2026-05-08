@@ -14,6 +14,10 @@ import FeaturedWorkshops from "./FeaturedWorkshops.astro";
 import FeaturedDestinations from "./FeaturedDestinations.astro";
 import Testimonials from "./Testimonials.astro";
 import EmbedCode from "./EmbedCode.astro";
+import Numbers from "./Numbers.astro";
+import FeaturedGuides from "./FeaturedGuides.astro";
+import Support from "./Support.astro";
+import VideoEmbed from "./VideoEmbed.astro";
 
 const componentMap: Record<ComponentType, any> = {
   "blocks.hero": Hero,
@@ -30,6 +34,10 @@ const componentMap: Record<ComponentType, any> = {
   "blocks.featured-destinations": FeaturedDestinations,
   "blocks.testimonials": Testimonials,
   "blocks.embed-code": EmbedCode,
+  "blocks.numbers": Numbers,
+  "blocks.featured-guides": FeaturedGuides,
+  "blocks.support": Support,
+  "blocks.video-embed": VideoEmbed,
 };
 
 const { blocks } = Astro.props;

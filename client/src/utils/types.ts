@@ -78,6 +78,19 @@ export interface GlobalPartners {
   partners?: Partner[];
 }
 
+export interface GlobalSupport {
+  contactPhone?: string | null;
+  contactEmail?: string | null;
+  contactAddress?: string | null;
+  card?: {
+    id?: number;
+    heading: string;
+    text?: string | null;
+    icon?: string | null;
+    link?: Link | null;
+  }[];
+}
+
 export type ComponentType =
   | "blocks.hero"
   | "blocks.heading-section"
@@ -92,7 +105,11 @@ export type ComponentType =
   | "blocks.featured-workshops"
   | "blocks.featured-destinations"
   | "blocks.testimonials"
-  | "blocks.embed-code";
+  | "blocks.embed-code"
+  | "blocks.numbers"
+  | "blocks.featured-guides"
+  | "blocks.support"
+  | "blocks.video-embed";
 
 export interface Base<
   T extends ComponentType,
@@ -124,11 +141,15 @@ export interface HeadingSectionProps extends Base<"blocks.heading-section"> {
 }
 
 export interface CardGridProps extends Base<"blocks.card-grid"> {
-  card: {
-    id: number;
+  title?: string | null;
+  subtitle?: string | null;
+  noPadding?: boolean | null;
+  card?: {
+    id?: number;
     heading: string;
-    text: string;
-    image: Image;
+    text?: string | null;
+    icon?: string | null;
+    link?: Link | null;
   }[];
 }
 
@@ -142,9 +163,14 @@ export interface ContentWithImageProps
 }
 
 export interface FaqsProps extends Base<"blocks.faqs"> {
-  faq: {
-    heading: string;
-    text: string;
+  title?: string | null;
+  subtitle?: string | null;
+  link?: Link | null;
+  faqs?: {
+    id?: number;
+    documentId?: string;
+    question: string;
+    answer: string;
   }[];
 }
 export interface PersonCardProps extends Base<"blocks.person-card"> {
@@ -239,6 +265,62 @@ export interface EmbedCodeProps extends Base<"blocks.embed-code"> {
   code?: string | null;
 }
 
+export interface NumbersProps extends Base<"blocks.numbers"> {
+  title?: string | null;
+  subtitle?: string | null;
+  numbers?: {
+    id?: number;
+    title: string;
+    subtitle?: string | null;
+    icon?: string | null;
+  }[];
+}
+
+interface SelectedGuideRelation {
+  id?: number;
+  documentId?: string;
+  title: string;
+  slug: string;
+  description?: string | null;
+  publishedAt?: string | null;
+  featuredImage?: { url: string; alternativeText?: string | null } | null;
+  category?: { title: string; slug: string } | null;
+}
+
+export interface FeaturedGuidesProps extends Base<"blocks.featured-guides"> {
+  title?: string | null;
+  subtitle?: string | null;
+  readMoreLink?: Link | null;
+  showPosts?: "latest_both" | "latest_travel" | "latest_investor" | "selected" | null;
+  selectedTravelGuides?: SelectedGuideRelation[];
+  selectedInvestorGuides?: SelectedGuideRelation[];
+}
+
+export interface SupportProps extends Base<"blocks.support"> {
+  title?: string | null;
+  subtitle?: string | null;
+}
+
+export interface VideoEmbedProps extends Base<"blocks.video-embed"> {
+  title?: string | null;
+  subtitle?: string | null;
+  videoType?: "youtube" | "upload";
+  youtubeUrl?: string | null;
+  videoFile?: { url: string; alternativeText?: string | null; mime?: string } | null;
+  twoColumns?: boolean | null;
+}
+
+export interface GuideCardData {
+  title: string;
+  slug: string;
+  href: string;
+  description?: string | null;
+  publishedAt?: string | null;
+  featuredImage?: { url: string; alternativeText?: string | null } | null;
+  category?: { title: string; slug: string } | null;
+  basePath: "travel-guide" | "investor-guide";
+}
+
 export type BlockData =
   | HeroProps
   | HeadingSectionProps
@@ -253,7 +335,11 @@ export type BlockData =
   | FeaturedWorkshopsProps
   | FeaturedDestinationsProps
   | TestimonialsProps
-  | EmbedCodeProps;
+  | EmbedCodeProps
+  | NumbersProps
+  | FeaturedGuidesProps
+  | SupportProps
+  | VideoEmbedProps;
 
 // ── Guide types ───────────────────────────────────────────────────────────────
 

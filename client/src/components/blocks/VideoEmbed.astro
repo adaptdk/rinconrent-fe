@@ -1,0 +1,84 @@
+---
+import type { VideoEmbedProps } from "../../utils/types";
+
+interface Props {
+  data: VideoEmbedProps;
+}
+
+const {
+  data: { title, subtitle, videoType = "youtube", youtubeUrl, videoFile, twoColumns = false },
+} = Astro.props;
+
+const BASE_URL = (
+  import.meta.env.STRAPI_BASE_URL ?? "http://localhost:1337"
+).replace(/\/api$/, "");
+
+function getStrapiUrl(url: string | null | undefined): string | undefined {
+  if (!url) return undefined;
+  if (url.startsWith("data:") || url.startsWith("http") || url.startsWith("//"))
+    return url;
+  return `${BASE_URL}${url}`;
+}
+
+function getYouTubeEmbedUrl(url: string): string {
+  const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+  return m ? `https://www.youtube.com/embed/${m[1]}` : url;
+}
+
+const isYoutube = videoType === "youtube";
+const hasContent = title || subtitle;
+const embedUrl = isYoutube && youtubeUrl ? getYouTubeEmbedUrl(youtubeUrl) : null;
+const videoSrc = !isYoutube && videoFile?.url ? getStrapiUrl(videoFile.url) : null;
+---
+
+<section class="block-video py-16 px-6">
+  <div class={`block-video__inner mx-auto max-w-7xl ${twoColumns ? "flex flex-col md:flex-row items-start gap-12" : ""}`}>
+
+    {hasContent && (
+      <div class={`block-video__header ${twoColumns ? "md:w-1/2 flex-shrink-0" : "mb-10 max-w-2xl md:mx-auto md:text-center"}`}>
+        {title && (
+          <h2 class="block-video__title font-heading font-bold text-secondary text-3xl md:text-4xl leading-tight">
+            {title}
+          </h2>
+        )}
+        {subtitle && (
+          <p class={`block-video__subtitle text-muted text-lg leading-relaxed ${title ? "mt-4" : ""}`}>
+            {subtitle}
+          </p>
+        )}
+      </div>
+    )}
+
+    <div
+      class={`block-video__media w-full ${twoColumns ? "md:w-1/2" : "mx-auto max-w-6xl"}`}
+      data-block-video
+    >
+      {isYoutube && embedUrl && (
+        <div class="block-video__ratio relative w-full overflow-hidden rounded-xl" style="padding-bottom: 56.25%;">
+          <iframe
+            class="absolute inset-0 w-full h-full"
+            src={embedUrl}
+            title={title ?? "Video"}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="lazy"
+          />
+        </div>
+      )}
+
+      {!isYoutube && videoSrc && (
+        <video
+          class="block-video__video w-full rounded-xl"
+          src={videoSrc}
+          controls={true}
+          playsinline={true}
+          preload="metadata"
+        />
+      )}
+    </div>
+  </div>
+</section>
+
+<script>
+  import "../../scripts/block-video.js";
+</script>

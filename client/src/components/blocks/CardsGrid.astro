@@ -5,20 +5,66 @@ interface Props {
   data: CardGridProps;
 }
 
-const {
-  data: { card },
-} = Astro.props;
+const { data: { title, subtitle, noPadding = false, card = [] } } = Astro.props;
 ---
 
 <section>
-  <div class="mx-auto max-w-6xl px-6 py-16">
-    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-      {card && card.map((card) => (
-        <div class="group rounded-card border border-border bg-surface-raised p-6 transition hover:shadow-md hover:border-border-hover">
-          <h4 class="text-lg font-semibold text-secondary group-hover:text-primary-600 transition font-heading">{card.heading}</h4>
-          <p class="mt-2 text-sm leading-relaxed text-muted">{card.text}</p>
-        </div>
-      ))}
-    </div>
+  <div class="mx-auto container px-6 py-16">
+
+    {(title || subtitle) && (
+      <div class="mb-10">
+        {title && (
+          <h2 class="text-h2 font-bold font-heading text-secondary leading-tight mb-5">
+            {title}
+          </h2>
+        )}
+        {subtitle && (
+          <p class="text-body-l text-muted leading-relaxed">{subtitle}</p>
+        )}
+      </div>
+    )}
+
+    {card.length > 0 && (
+      <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        {card.map((item) => (
+          noPadding ? (
+            /* Plain layout */
+            <div class="card-grid__item">
+              <div class="flex items-center gap-6 mb-3 lg:flex-col lg:items-start lg:mb-0">
+                {item.icon && (
+                  <div class="bg-gray-blue rounded-tl-[15px] rounded-br-[15px] p-2 inline-block text-white shrink-0">
+                    <i class:list={[item.icon, "inline-flex w-8 h-8 text-h6 items-center justify-center"]} aria-hidden="true"></i>
+                  </div>
+                )}
+                <h3 class="font-semibold font-body text-h6 text-secondary mb-0 lg:mb-3">
+                  {item.heading}
+                </h3>
+              </div>
+              {item.text && (
+                <p class="text-body-s text-muted leading-relaxed">{item.text}</p>
+              )}
+            </div>
+          ) : (
+            /* Boxed card layout */
+            <div class="card-grid__item bg-surface-raised rounded-xl border border-border p-6">
+              <div class="flex items-center gap-6 mb-3 lg:flex-col lg:items-start lg:mb-0">
+                {item.icon && (
+                  <div class="bg-gray-blue rounded-tl-[15px] rounded-br-[15px] p-2 inline-block text-white shrink-0">
+                    <i class:list={[item.icon, "inline-flex w-8 h-8 text-h6 items-center justify-center"]} aria-hidden="true"></i>
+                  </div>
+                )}
+                <h3 class="font-semibold font-body text-h6 text-secondary mb-0 lg:mb-3">
+                  {item.heading}
+                </h3>
+              </div>
+              {item.text && (
+                <p class="text-body-s text-muted leading-relaxed">{item.text}</p>
+              )}
+            </div>
+          )
+        ))}
+      </div>
+    )}
+
   </div>
 </section>

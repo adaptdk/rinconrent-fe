@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_layout_supports",
+  "info": {
+    "displayName": "Support"
+  },
+  "options": {},
+  "attributes": {
+    "contactPhone": {
+      "type": "string"
+    },
+    "contactEmail": {
+      "type": "string"
+    },
+    "contactAddress": {
+      "type": "text"
+    },
+    "card": {
+      "displayName": "Get in touch cards",
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.card",
+      "max": 3
+    }
+  }
+}
