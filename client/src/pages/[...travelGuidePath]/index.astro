@@ -1,0 +1,248 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlockRenderer from "../../components/blocks/BlockRenderer.astro";
+import Markdown from "../../components/blocks/Markdown.astro";
+import StrapiImage from "../../components/StrapiImage.astro";
+import GuideCard from "../../components/GuideCard.astro";
+import GuideCategoryNav from "../../components/GuideCategoryNav.astro";
+import {
+  getSeoConfig,
+  getAllTravelGuideSlugs,
+  getTravelGuideData,
+  getTravelGuideCategories,
+} from "../../utils/loaders";
+import { strapiClient } from "../../utils/strapi-client";
+
+export async function getStaticPaths() {
+  const locale = "en";
+  const [slugs, seoConfig, categories] = await Promise.all([
+    getAllTravelGuideSlugs(locale),
+    getSeoConfig(locale),
+    getTravelGuideCategories(locale),
+  ]);
+  const basePath = seoConfig.travelGuidesBasePath ?? "travel-guide";
+
+  return [
+    // Listing page
+    {
+      params: { travelGuidePath: basePath },
+      props: { mode: "listing", locale, basePath, categories },
+    },
+    // Category filter pages
+    ...categories.map((cat: any) => ({
+      params: { travelGuidePath: `${basePath}/category/${cat.slug}` },
+      props: {
+        mode: "category",
+        locale,
+        basePath,
+        categories,
+        categorySlug: cat.slug,
+        category: cat,
+      },
+    })),
+    // Single article pages
+    ...slugs.map((slug: string) => ({
+      params: { travelGuidePath: `${basePath}/${slug}` },
+      props: { mode: "article", slug, locale, basePath, categories },
+    })),
+  ];
+}
+
+const { mode, slug, locale, basePath, categories, categorySlug, category } = Astro.props;
+
+let guide: any = null;
+let guides: any[] = [];
+let relatedGuides: any[] = [];
+
+if (mode === "article") {
+  guide = await getTravelGuideData(slug, locale);
+  if (guide?.category?.slug) {
+    const rel = await strapiClient.collection("travel-guides").find({
+      locale,
+      filters: {
+        category: { slug: { $eq: guide.category.slug } },
+        slug: { $ne: slug },
+      },
+      fields: ["title", "slug", "description", "publishedAt"],
+      populate: {
+        featuredImage: { fields: ["url", "alternativeText"] },
+        category: { fields: ["title", "slug"] },
+      },
+      pagination: { limit: 3 },
+    } as any);
+    relatedGuides = rel?.data ?? [];
+  }
+} else {
+  const filters: any =
+    mode === "category" ? { category: { slug: { $eq: categorySlug } } } : {};
+  const data = await strapiClient.collection("travel-guides").find({
+    locale,
+    filters,
+    fields: ["title", "slug", "description", "publishedAt"],
+    populate: {
+      featuredImage: { fields: ["url", "alternativeText"] },
+      category: { fields: ["title", "slug"] },
+    },
+    pagination: { limit: 100 },
+  } as any);
+  guides = data?.data ?? [];
+}
+
+const pageTitle =
+  mode === "article"
+    ? (guide?.title ?? "Travel Guide")
+    : mode === "category"
+    ? (category?.title ?? "Travel Guides")
+    : "Travel Guides";
+
+const pageDescription =
+  mode === "article"
+    ? (guide?.description ?? "")
+    : "Expert travel guides for Málaga — beaches, food, culture, and day trips.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+
+  {/* ── Listing / Category ────────────────────────────────────────────────── */}
+  {(mode === "listing" || mode === "category") && (
+    <section class="bg-surface">
+
+      {/* Page header */}
+      <div class="mx-auto max-w-6xl px-6 py-16 pb-10">
+        <p class="text-sm font-semibold uppercase tracking-widest text-primary-600 mb-2">
+          Explore Málaga
+        </p>
+        <h1 class="font-heading text-4xl font-bold text-secondary sm:text-5xl">
+          {mode === "category" ? category?.title : "Travel Guides"}
+        </h1>
+        {mode === "category" && category?.description && (
+          <p class="mt-3 text-lg text-muted">{category.description}</p>
+        )}
+        {mode === "listing" && (
+          <p class="mt-3 text-lg text-muted">
+            Expert guides to beaches, food, culture, and day trips around Málaga.
+          </p>
+        )}
+      </div>
+
+      {/* Category nav */}
+      {categories.length > 0 && (
+        <GuideCategoryNav
+          basePath={basePath}
+          categories={categories}
+          activeSlug={mode === "category" ? categorySlug : null}
+        />
+      )}
+
+      {/* Guide grid */}
+      <div class="mx-auto max-w-6xl px-6 py-12">
+        {guides.length === 0 ? (
+          <p class="text-muted">No guides found in this category yet.</p>
+        ) : (
+          <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {guides.map((g: any) => (
+              <GuideCard
+                title={g.title}
+                slug={g.slug}
+                href={`/${basePath}/${g.slug}`}
+                description={g.description}
+                publishedAt={g.publishedAt}
+                featuredImage={g.featuredImage}
+                category={g.category}
+                basePath={basePath}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  )}
+
+  {/* ── Single article ────────────────────────────────────────────────────── */}
+  {mode === "article" && guide && (
+    <article>
+
+      {/* Hero image */}
+      {guide.featuredImage?.url && (
+        <div class="mx-auto max-w-5xl px-6 pt-10">
+          <StrapiImage
+            src={guide.featuredImage.url}
+            alt={guide.featuredImage.alternativeText || guide.title || ""}
+            width={1200}
+            height={600}
+            class="w-full h-72 sm:h-96 object-cover rounded-md"
+          />
+        </div>
+      )}
+
+      {/* Article header */}
+      <div class="mx-auto max-w-3xl px-6 py-10">
+        {guide.category?.slug && (
+          <a
+            href={`/${basePath}/category/${guide.category.slug}`}
+            class="mb-4 inline-block bg-beige text-dark-blue text-body-xs uppercase px-3 py-1 rounded-full font-bold hover:opacity-80 transition-opacity"
+          >
+            {guide.category.title}
+          </a>
+        )}
+        <h1 class="font-heading text-h3 font-bold text-secondary leading-tight">
+          {guide.title}
+        </h1>
+        {guide.description && (
+          <p class="mt-4 text-lg text-muted leading-relaxed">{guide.description}</p>
+        )}
+        {guide.publishedAt && (
+          <p class="mt-3 text-body-xs font-bold text-grey-disabled">
+            {new Date(guide.publishedAt).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" })}
+          </p>
+        )}
+      </div>
+
+      {/* Main content (WYSIWYG) */}
+      {guide.content && (
+        <Markdown data={{ content: guide.content, __component: "blocks.markdown" }} />
+      )}
+
+      {/* Additional blocks */}
+      {guide.blocks?.length > 0 && (
+        <BlockRenderer blocks={guide.blocks} />
+      )}
+
+      {/* Related guides */}
+      {relatedGuides.length > 0 && (
+        <section class="mx-auto max-w-6xl px-6 pb-20">
+          <div class="border-t border-border pt-14">
+            <h2 class="font-heading text-2xl font-bold text-secondary mb-8">
+              Related Guides
+            </h2>
+            <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {relatedGuides.map((rel: any) => (
+                <GuideCard
+                  title={rel.title}
+                  slug={rel.slug}
+                  href={`/${basePath}/${rel.slug}`}
+                  description={rel.description}
+                  publishedAt={rel.publishedAt}
+                  featuredImage={rel.featuredImage}
+                  category={rel.category}
+                  basePath={basePath}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+    </article>
+  )}
+
+  {/* ── Not found ─────────────────────────────────────────────────────────── */}
+  {mode === "article" && !guide && (
+    <div class="mx-auto max-w-3xl px-6 py-20 text-center">
+      <p class="text-muted">Guide not found.</p>
+      <a href={`/${basePath}`} class="mt-4 inline-block text-primary-600 hover:underline">
+        ← Back to Travel Guides
+      </a>
+    </div>
+  )}
+
+</BaseLayout>

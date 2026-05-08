@@ -1,0 +1,57 @@
+---
+interface Category {
+  title: string;
+  slug: string;
+}
+
+interface Props {
+  basePath: string;
+  categories: Category[];
+  /** Active category slug. Pass null / undefined for "View all". */
+  activeSlug?: string | null;
+  viewAllLabel?: string;
+}
+
+const {
+  basePath,
+  categories,
+  activeSlug,
+  viewAllLabel = "View all",
+} = Astro.props;
+---
+
+<div class="max-w-6xl mx-auto px-6">
+  <nav class="border-y border-beige">
+    <ul
+      class="flex mx-auto px-4 gap-x-10 list-none overflow-x-auto justify-center"
+    >
+      <li class="flex-shrink-0">
+        <a
+          href={`/${basePath}`}
+          class:list={[
+            "guide-nav__link",
+            !activeSlug && "guide-nav__link--active",
+          ]}
+        >
+          {viewAllLabel}
+        </a>
+      </li>
+
+      {
+        categories.map((cat) => (
+          <li class="flex-shrink-0">
+            <a
+              href={`/${basePath}/category/${cat.slug}`}
+              class:list={[
+                "guide-nav__link",
+                activeSlug === cat.slug && "guide-nav__link--active",
+              ]}
+            >
+              {cat.title}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</div>

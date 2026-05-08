@@ -465,10 +465,157 @@ const strapiDestinations = defineCollection({
   }),
 });
 
+// ── Guide block populate (only the 3 blocks used by guides) ──────────────────
+// NOTE: Keep in sync with guidesBlocksPopulate in client/src/utils/loaders.ts
+
+const guideBlocksPopulate = {
+  on: {
+    "blocks.markdown": {
+      fields: ["content"],
+    },
+    "blocks.faqs": {
+      populate: {
+        faq: { fields: ["heading", "text"] },
+      },
+    },
+    "blocks.heading-section": {
+      fields: ["heading", "subHeading", "anchorLink"],
+    },
+  },
+};
+
+// ── Guide block schema ────────────────────────────────────────────────────────
+
+const guideBlockSchema = z.discriminatedUnion("__component", [
+  z.object({
+    ...blockBase,
+    __component: z.literal("blocks.markdown"),
+    content: z.string(),
+  }),
+  z.object({
+    ...blockBase,
+    __component: z.literal("blocks.faqs"),
+    faq: z.array(
+      z.object({
+        id: z.number().optional(),
+        heading: z.string(),
+        text: z.string(),
+      })
+    ),
+  }),
+  z.object({
+    ...blockBase,
+    __component: z.literal("blocks.heading-section"),
+    heading: z.string(),
+    subHeading: z.string().nullable().optional(),
+    anchorLink: z.string().nullable().optional(),
+  }),
+]);
+
+// ── Guide category schema ─────────────────────────────────────────────────────
+
+const guideCategorySchema = z.object({
+  id: z.number().optional(),
+  documentId: z.string().optional(),
+  title: z.string(),
+  slug: z.string(),
+  description: z.string().nullable().optional(),
+});
+
+// ── Guide collection schema ───────────────────────────────────────────────────
+
+const guideCollectionSchema = z.object({
+  title: z.string().nullable().optional(),
+  slug: z.string(),
+  locale: z.string().optional(),
+  description: z.string().nullable().optional(),
+  content: z.string().nullable().optional(),
+  publishedAt: z.string().nullable().optional(),
+  featuredImage: imageSchema.nullable().optional(),
+  category: guideCategorySchema.nullable().optional(),
+  blocks: z.array(guideBlockSchema).optional(),
+});
+
+// ── Guide collections ─────────────────────────────────────────────────────────
+
+const strapiTravelGuides = defineCollection({
+  loader: strapiLoader({
+    contentType: "travel-guide",
+    clientConfig,
+    params: {
+      locale: "all",
+      fields: ["title", "slug", "locale", "description", "content", "publishedAt"],
+      populate: {
+        featuredImage: { fields: ["url", "alternativeText"] },
+        category: { fields: ["title", "slug"] },
+        blocks: guideBlocksPopulate,
+      },
+    },
+  }),
+  schema: guideCollectionSchema,
+});
+
+const strapiInvestorGuides = defineCollection({
+  loader: strapiLoader({
+    contentType: "investor-guide",
+    clientConfig,
+    params: {
+      locale: "all",
+      fields: ["title", "slug", "locale", "description", "content", "publishedAt"],
+      populate: {
+        featuredImage: { fields: ["url", "alternativeText"] },
+        category: { fields: ["title", "slug"] },
+        blocks: guideBlocksPopulate,
+      },
+    },
+  }),
+  schema: guideCollectionSchema,
+});
+
+const strapiTravelGuideCategories = defineCollection({
+  loader: strapiLoader({
+    contentType: "travel-guide-category",
+    pluralContentType: "travel-guide-categories",
+    clientConfig,
+    params: {
+      locale: "all",
+      fields: ["title", "slug", "locale", "description"],
+    },
+  }),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    locale: z.string().optional(),
+    description: z.string().nullable().optional(),
+  }),
+});
+
+const strapiInvestorGuideCategories = defineCollection({
+  loader: strapiLoader({
+    contentType: "investor-guide-category",
+    pluralContentType: "investor-guide-categories",
+    clientConfig,
+    params: {
+      locale: "all",
+      fields: ["title", "slug", "locale", "description"],
+    },
+  }),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    locale: z.string().optional(),
+    description: z.string().nullable().optional(),
+  }),
+});
+
 export const collections = {
   strapiPosts,
   strapiPages,
   strapiWorkshops,
   strapiProducts,
   strapiDestinations,
+  strapiTravelGuides,
+  strapiInvestorGuides,
+  strapiTravelGuideCategories,
+  strapiInvestorGuideCategories,
 };

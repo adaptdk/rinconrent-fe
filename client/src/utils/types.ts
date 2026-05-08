@@ -65,6 +65,19 @@ export interface GlobalPageFooter {
   text: string;
 }
 
+export interface Partner {
+  id: number;
+  name: string;
+  link: string;
+  logo?: Image | null;
+}
+
+export interface GlobalPartners {
+  title?: string | null;
+  description?: string | null;
+  partners?: Partner[];
+}
+
 export type ComponentType =
   | "blocks.hero"
   | "blocks.heading-section"
@@ -241,3 +254,41 @@ export type BlockData =
   | FeaturedDestinationsProps
   | TestimonialsProps
   | EmbedCodeProps;
+
+// ── Guide types ───────────────────────────────────────────────────────────────
+
+export interface TravelGuideCategory {
+  documentId?: string;
+  title: string;
+  slug: string;
+  description?: string | null;
+}
+
+export interface InvestorGuideCategory {
+  documentId?: string;
+  title: string;
+  slug: string;
+  description?: string | null;
+}
+
+export interface TravelGuide {
+  title: string;
+  slug: string;
+  description?: string | null;
+  locale?: string;
+  publishedAt?: string | null;
+  category?: TravelGuideCategory | null;
+  featuredImage?: Image | null;
+  blocks?: BlockData[];
+}
+
+export interface InvestorGuide {
+  title: string;
+  slug: string;
+  description?: string | null;
+  locale?: string;
+  publishedAt?: string | null;
+  category?: InvestorGuideCategory | null;
+  featuredImage?: Image | null;
+  blocks?: BlockData[];
+}

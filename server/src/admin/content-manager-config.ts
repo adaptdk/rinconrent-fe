@@ -140,6 +140,39 @@ export const COMPONENT_CONFIGS: Record<string, ComponentConfig> = {
       },
     },
   },
+  "layout.partners": {
+    fields: {
+      title: {
+        label: "Section heading",
+        description: "Optional. Leave blank to show logos only.",
+      },
+      description: {
+        label: "Section description",
+        description: "Optional supporting text shown beside the heading.",
+      },
+      partners: {
+        label: "Partners",
+        description: "Add one entry per partner. Logos render in a horizontal row.",
+      },
+    },
+  },
+  "shared.partner": {
+    mainField: "name",
+    fields: {
+      name: {
+        label: "Partner name",
+        description: "Used as image alt text and screen-reader label for the link.",
+      },
+      link: {
+        label: "Website URL",
+        description: "Full URL including https://. Opens in a new tab.",
+      },
+      logo: {
+        label: "Logo image",
+        description: "SVG or PNG with transparent background. Max-height 80px mobile / 150px desktop.",
+      },
+    },
+  },
 };
 
 export const CONTENT_TYPE_CONFIGS: Record<string, ContentTypeConfig> = {
@@ -188,6 +221,106 @@ export const CONTENT_TYPE_CONFIGS: Record<string, ContentTypeConfig> = {
       destinationsBasePath: {
         label: "Destinations URL segment",
         description: "The URL word used for destination pages in this locale (e.g. 'destinations' in English, 'destinos' in Spanish). Changing this requires a site rebuild.",
+      },
+      travelGuidesBasePath: {
+        label: "Travel Guides URL segment",
+        description: "The URL word used for travel guide pages in this locale (e.g. 'travel-guide' in English, 'guia-de-viaje' in Spanish). Changing this requires a site rebuild.",
+      },
+      investorGuidesBasePath: {
+        label: "Investor Guides URL segment",
+        description: "The URL word used for investor guide pages in this locale (e.g. 'investor-guide' in English, 'guia-del-inversor' in Spanish). Changing this requires a site rebuild.",
+      },
+    },
+  },
+  "api::travel-guide-category.travel-guide-category": {
+    fields: {
+      title: {
+        label: "Title",
+        description: "Category name. Each locale has its own translated title.",
+      },
+      slug: {
+        label: "Slug",
+        description: "Auto-generated from the title. Each locale has its own slug — switch locale to set the translated slug.",
+      },
+      description: {
+        label: "Description",
+        description: "Short description of what travel guides in this category cover.",
+      },
+    },
+  },
+  "api::investor-guide-category.investor-guide-category": {
+    fields: {
+      title: {
+        label: "Title",
+        description: "Category name. Each locale has its own translated title.",
+      },
+      slug: {
+        label: "Slug",
+        description: "Auto-generated from the title. Each locale has its own slug — switch locale to set the translated slug.",
+      },
+      description: {
+        label: "Description",
+        description: "Short description of what investor guides in this category cover.",
+      },
+    },
+  },
+  "api::travel-guide.travel-guide": {
+    fields: {
+      title: {
+        label: "Title",
+      },
+      slug: {
+        label: "Slug",
+        description: "Auto-generated from the title. Each locale has its own unique slug — switch locale to set the translated slug.",
+      },
+      description: {
+        label: "Excerpt",
+        description: "Short summary shown in listing cards and social previews (2–3 sentences).",
+      },
+      content: {
+        label: "Content",
+        description: "Main article body. Supports Markdown — headings, bold, lists, links.",
+      },
+      category: {
+        label: "Category",
+        description: "The travel guide category this article belongs to.",
+      },
+      featuredImage: {
+        label: "Featured image",
+        description: "Hero image shown on the article page and in listing cards. Shared across all locales.",
+      },
+      blocks: {
+        label: "Content blocks",
+      },
+    },
+  },
+  "api::investor-guide.investor-guide": {
+    fields: {
+      title: {
+        label: "Title",
+      },
+      slug: {
+        label: "Slug",
+        description: "Auto-generated from the title. Each locale has its own unique slug — switch locale to set the translated slug.",
+      },
+      description: {
+        label: "Excerpt",
+        description: "Short summary shown in listing cards and social previews (2–3 sentences).",
+      },
+      content: {
+        label: "Content",
+        description: "Main article body. Supports Markdown — headings, bold, lists, links.",
+      },
+      category: {
+        label: "Category",
+        description: "The investor guide category this article belongs to.",
+      },
+      featuredImage: {
+        label: "Featured image",
+        description: "Hero image shown on the article page and in listing cards. Shared across all locales.",
+      },
+      blocks: {
+        label: "Content blocks",
       },
     },
   },

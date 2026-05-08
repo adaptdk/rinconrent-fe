@@ -152,7 +152,18 @@ async function getGlobalPageData() {
       },
       socialLinks: {
         fields: ["platform", "href", "label"],
-      }
+      },
+      partners: {
+        fields: ["title", "description"],
+        populate: {
+          partners: {
+            fields: ["name", "link"],
+            populate: {
+              logo: { fields: ["url", "alternativeText"] },
+            },
+          },
+        },
+      },
     },
   });
   const globalData = data?.data;
@@ -239,17 +250,120 @@ async function getDestinationData(slug: string, locale = "en") {
   return (data?.data?.[0] as any) ?? null;
 }
 
-async function getSeoConfig(locale = "en"): Promise<{ destinationsBasePath?: string }> {
+async function getSeoConfig(locale = "en"): Promise<{
+  destinationsBasePath?: string;
+  travelGuidesBasePath?: string;
+  investorGuidesBasePath?: string;
+}> {
   try {
     const data = await strapiClient.single("seo-config").find({
       locale,
-      fields: ["destinationsBasePath"],
+      fields: ["destinationsBasePath", "travelGuidesBasePath", "investorGuidesBasePath"],
     } as any);
-    return (data?.data ?? {}) as { destinationsBasePath?: string };
+    return (data?.data ?? {}) as {
+      destinationsBasePath?: string;
+      travelGuidesBasePath?: string;
+      investorGuidesBasePath?: string;
+    };
   } catch {
     // No entry created yet — use schema defaults.
     return {};
   }
 }
 
-export { getGlobalPageData, getLandingPageData, getPageHeader, getAllPageSlugs, getPageData, getAllDestinationSlugs, getDestinationData, getSeoConfig };
+// ── Guide block populate (used by all guide loader functions) ─────────────────
+
+const guidesBlocksPopulate = {
+  on: {
+    "blocks.markdown": true,
+    "blocks.faqs": { populate: { faq: true } },
+    "blocks.heading-section": true,
+  },
+};
+
+// ── Travel guide loaders ──────────────────────────────────────────────────────
+
+async function getAllTravelGuideSlugs(locale = "en"): Promise<string[]> {
+  const guides = await strapiClient.collection("travel-guides").find({
+    locale,
+    fields: ["slug"],
+    pagination: { limit: 200 },
+  } as any);
+  return (guides?.data ?? []).map((g: any) => g.slug).filter(Boolean);
+}
+
+async function getTravelGuideData(slug: string, locale = "en") {
+  const data = await strapiClient.collection("travel-guides").find({
+    locale,
+    filters: { slug: { $eq: slug } },
+    fields: ["title", "slug", "description", "content", "locale", "publishedAt"],
+    populate: {
+      featuredImage: { fields: ["url", "alternativeText"] },
+      category: { fields: ["title", "slug"] },
+      blocks: guidesBlocksPopulate,
+    },
+    pagination: { limit: 1 },
+  } as any);
+  return (data?.data?.[0] as any) ?? null;
+}
+
+async function getTravelGuideCategories(locale = "en") {
+  const data = await strapiClient.collection("travel-guide-categories").find({
+    locale,
+    fields: ["title", "slug", "description"],
+    pagination: { limit: 100 },
+  } as any);
+  return (data?.data ?? []) as any[];
+}
+
+// ── Investor guide loaders ────────────────────────────────────────────────────
+
+async function getAllInvestorGuideSlugs(locale = "en"): Promise<string[]> {
+  const guides = await strapiClient.collection("investor-guides").find({
+    locale,
+    fields: ["slug"],
+    pagination: { limit: 200 },
+  } as any);
+  return (guides?.data ?? []).map((g: any) => g.slug).filter(Boolean);
+}
+
+async function getInvestorGuideData(slug: string, locale = "en") {
+  const data = await strapiClient.collection("investor-guides").find({
+    locale,
+    filters: { slug: { $eq: slug } },
+    fields: ["title", "slug", "description", "content", "locale", "publishedAt"],
+    populate: {
+      featuredImage: { fields: ["url", "alternativeText"] },
+      category: { fields: ["title", "slug"] },
+      blocks: guidesBlocksPopulate,
+    },
+    pagination: { limit: 1 },
+  } as any);
+  return (data?.data?.[0] as any) ?? null;
+}
+
+async function getInvestorGuideCategories(locale = "en") {
+  const data = await strapiClient.collection("investor-guide-categories").find({
+    locale,
+    fields: ["title", "slug", "description"],
+    pagination: { limit: 100 },
+  } as any);
+  return (data?.data ?? []) as any[];
+}
+
+export {
+  getGlobalPageData,
+  getLandingPageData,
+  getPageHeader,
+  getAllPageSlugs,
+  getPageData,
+  getAllDestinationSlugs,
+  getDestinationData,
+  getSeoConfig,
+  getAllTravelGuideSlugs,
+  getTravelGuideData,
+  getTravelGuideCategories,
+  getAllInvestorGuideSlugs,
+  getInvestorGuideData,
+  getInvestorGuideCategories,
+};

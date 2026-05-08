@@ -1,0 +1,60 @@
+---
+import type { GlobalPartners } from "../utils/types";
+import StrapiImage from "./StrapiImage.astro";
+
+interface Props {
+  data: GlobalPartners;
+}
+
+const { data } = Astro.props;
+const { title, description, partners } = data;
+
+if (!partners || partners.length === 0) return;
+---
+
+<section class="bg-surface-raised">
+  <div
+    class="mx-auto container px-6 py-6 md:py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6 md:gap-12"
+  >
+    {
+      (title || description) && (
+        <div class="shrink-0 max-w-sm text-center md:text-left">
+          {title && (
+            <h2 class="font-heading font-bold text-secondary mb-1">{title}</h2>
+          )}
+          {description && <p class="text-muted">{description}</p>}
+        </div>
+      )
+    }
+
+    <ul
+      class="flex flex-wrap items-center justify-center md:justify-start gap-6 md:gap-10 w-full"
+    >
+      {
+        partners.map((partner) => (
+          <li class="flex items-center justify-center">
+            <a
+              href={partner.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={partner.name}
+              class="block transition-opacity duration-200 hover:opacity-60"
+            >
+              {partner.logo?.url ? (
+                <StrapiImage
+                  src={partner.logo.url}
+                  alt={partner.logo.alternativeText || partner.name}
+                  width={200}
+                  height={150}
+                  class="w-auto h-auto max-w-full max-h-[80px] md:max-h-[100px] object-contain"
+                />
+              ) : (
+                <span class="text-muted font-semibold">{partner.name}</span>
+              )}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

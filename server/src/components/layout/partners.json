@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_layout_partners",
+  "info": {
+    "displayName": "Partners",
+    "description": "Global partners section shown on every page."
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "partners": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.partner"
+    }
+  }
+}

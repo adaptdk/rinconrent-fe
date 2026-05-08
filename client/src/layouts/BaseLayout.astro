@@ -6,9 +6,10 @@ import { getGlobalPageData } from "../utils/loaders";
 import Header from "../components/Header.astro";
 import Banner from "../components/Banner.astro";
 import Footer from "../components/Footer.astro";
+import Partners from "../components/Partners.astro";
 
 const data = await getGlobalPageData();
-const { header, banner, footer, contactPhone, contactEmail, contactAddress, socialLinks } = data;
+const { header, banner, footer, contactPhone, contactEmail, contactAddress, socialLinks, partners } = data;
 ---
 
 <!doctype html>
@@ -29,6 +30,7 @@ const { header, banner, footer, contactPhone, contactEmail, contactAddress, soci
     <main class="flex-1">
       <slot />
     </main>
+    { partners && <Partners data={partners} /> }
     { footer && <Footer footer={footer} {contactPhone} {contactEmail} {contactAddress} {socialLinks} /> }
   </body>
 </html>

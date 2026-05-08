@@ -8,6 +8,18 @@ const PUBLIC_ACTIONS = [
   'api::seo-config.seo-config.find',
   'api::testimonial.testimonial.find',
   'api::testimonial.testimonial.findOne',
+  // Travel guide categories
+  'api::travel-guide-category.travel-guide-category.find',
+  'api::travel-guide-category.travel-guide-category.findOne',
+  // Investor guide categories
+  'api::investor-guide-category.investor-guide-category.find',
+  'api::investor-guide-category.investor-guide-category.findOne',
+  // Travel guides
+  'api::travel-guide.travel-guide.find',
+  'api::travel-guide.travel-guide.findOne',
+  // Investor guides
+  'api::investor-guide.investor-guide.find',
+  'api::investor-guide.investor-guide.findOne',
 ];
 
 export default {

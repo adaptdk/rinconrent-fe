@@ -1,10 +1,10 @@
 {
-  "kind": "singleType",
-  "collectionName": "seo_config",
+  "kind": "collectionType",
+  "collectionName": "travel_guide_categories",
   "info": {
-    "singularName": "seo-config",
-    "pluralName": "seo-configs",
-    "displayName": "SEO Config",
+    "singularName": "travel-guide-category",
+    "pluralName": "travel-guide-categories",
+    "displayName": "Travel Guide Category",
     "description": ""
   },
   "options": {
@@ -16,23 +16,22 @@
     }
   },
   "attributes": {
-    "destinationsBasePath": {
+    "title": {
       "type": "string",
-      "default": "destinations",
+      "required": true,
       "pluginOptions": {
         "i18n": { "localized": true }
       }
     },
-    "travelGuidesBasePath": {
-      "type": "string",
-      "default": "travel-guide",
+    "description": {
+      "type": "text",
       "pluginOptions": {
         "i18n": { "localized": true }
       }
     },
-    "investorGuidesBasePath": {
-      "type": "string",
-      "default": "investor-guide",
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
       "pluginOptions": {
         "i18n": { "localized": true }
       }

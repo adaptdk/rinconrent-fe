@@ -242,6 +242,19 @@ export interface LayoutPageHeader extends Struct.ComponentSchema {
   };
 }
 
+export interface LayoutPartners extends Struct.ComponentSchema {
+  collectionName: 'components_layout_partners';
+  info: {
+    description: 'Global partners section shown on every page.';
+    displayName: 'Partners';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    partners: Schema.Attribute.Component<'shared.partner', true>;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface SharedCard extends Struct.ComponentSchema {
   collectionName: 'components_shared_cards';
   info: {
@@ -320,6 +333,19 @@ export interface SharedNavItem extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedPartner extends Struct.ComponentSchema {
+  collectionName: 'components_shared_partners';
+  info: {
+    description: 'A single partner entry with logo, name, and link.';
+    displayName: 'Partner';
+  };
+  attributes: {
+    link: Schema.Attribute.String & Schema.Attribute.Required;
+    logo: Schema.Attribute.Media<'images'>;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface SharedSocialLink extends Struct.ComponentSchema {
   collectionName: 'components_shared_social_links';
   info: {
@@ -356,12 +382,14 @@ declare module '@strapi/strapi' {
       'layout.footer': LayoutFooter;
       'layout.header': LayoutHeader;
       'layout.page-header': LayoutPageHeader;
+      'layout.partners': LayoutPartners;
       'shared.card': SharedCard;
       'shared.community-link': SharedCommunityLink;
       'shared.footer-menu': SharedFooterMenu;
       'shared.link': SharedLink;
       'shared.logo': SharedLogo;
       'shared.nav-item': SharedNavItem;
+      'shared.partner': SharedPartner;
       'shared.social-link': SharedSocialLink;
     }
   }
