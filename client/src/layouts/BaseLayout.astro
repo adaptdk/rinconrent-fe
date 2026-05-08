@@ -7,6 +7,7 @@ import Header from "../components/Header.astro";
 import Banner from "../components/Banner.astro";
 import Footer from "../components/Footer.astro";
 import Partners from "../components/Partners.astro";
+import CtaGroupNav from "../components/CtaGroupNav.astro";
 
 const data = await getGlobalPageData();
 const { header, banner, footer, support, socialLinks, partners } = data;
@@ -29,6 +30,7 @@ const { header, banner, footer, support, socialLinks, partners } = data;
     { banner && <Banner data={banner} /> }
     <Header data={header} />
     <main class="flex-1">
+      <CtaGroupNav links={header?.ctaGroup?.children} currentPath={Astro.url.pathname} />
       <slot />
     </main>
     { partners && <Partners data={partners} /> }

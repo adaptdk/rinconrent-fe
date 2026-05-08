@@ -1,0 +1,45 @@
+---
+import type { Link } from "../utils/types";
+
+interface Props {
+  links: Link[] | undefined;
+  currentPath: string;
+}
+
+const { links, currentPath } = Astro.props;
+
+const normalize = (p: string) => p.replace(/\/$/, "") || "/";
+const normalizedCurrent = normalize(currentPath);
+
+const isInGroup = links?.some((l) => normalize(l.href) === normalizedCurrent);
+---
+
+{
+  isInGroup && (
+    <nav aria-label="Section navigation" class="bg-surface pt-8">
+      <div class="mx-auto max-w-7xl px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-6">
+        {links?.map((link) => {
+          const isActive = normalize(link.href) === normalizedCurrent;
+          return (
+            <div
+              class:list={[
+                "flex items-center justify-center border transition-colors hover:bg-beige",
+                isActive
+                  ? "border-secondary"
+                  : "border-border hover:border-secondary",
+              ]}
+            >
+              <a
+                href={link.href}
+                aria-current={isActive ? "page" : undefined}
+                class="block py-3 px-10 font-heading font-bold text-h5 text-secondary leading-normal text-center w-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+              >
+                {link.label}
+              </a>
+            </div>
+          );
+        })}
+      </div>
+    </nav>
+  )
+}
