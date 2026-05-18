@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_property_pricings",
+  "info": {
+    "displayName": "Pricing",
+    "description": "Base price, currency, and optional discount/fee fields. Not localized."
+  },
+  "options": {},
+  "attributes": {
+    "basePrice": {
+      "type": "decimal",
+      "required": true
+    },
+    "currency": {
+      "type": "string",
+      "required": true,
+      "default": "USD"
+    },
+    "weeklyDiscount": {
+      "type": "decimal"
+    },
+    "monthlyDiscount": {
+      "type": "decimal"
+    },
+    "cleaningFee": {
+      "type": "decimal"
+    }
+  }
+}

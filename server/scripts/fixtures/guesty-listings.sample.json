@@ -1,0 +1,338 @@
+[
+  {
+    "_id": "guesty-fixture-001",
+    "title": "Sunset Penthouse with Sea View",
+    "nickname": "Sunset Penthouse",
+    "propertyType": "Apartment",
+    "accommodates": 6,
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "publicDescription": {
+      "summary": "Top-floor penthouse in the Soho district with a wraparound terrace and panoramic views of the Mediterranean.",
+      "space": "Floor-to-ceiling windows, an open-plan kitchen finished in oak and marble, and three king bedrooms. The terrace seats eight, with a built-in grill and a freestanding bath under the sky.",
+      "neighborhood": "Soho is Málaga's contemporary art district — galleries, third-wave coffee, and the Pompidou Centre are all within a short walk."
+    },
+    "address": {
+      "full": "Calle Tomás Heredia 21, 29001 Málaga, Spain",
+      "street": "Calle Tomás Heredia 21",
+      "city": "Málaga",
+      "state": "Andalucía",
+      "country": "Spain",
+      "zipcode": "29001",
+      "lat": 36.7197,
+      "lng": -4.4234
+    },
+    "pictures": [
+      { "original": "https://picsum.photos/seed/property-sunset-1/1600/1000", "caption": "Terrace at golden hour" },
+      { "original": "https://picsum.photos/seed/property-sunset-2/1600/1000", "caption": "Open-plan living" },
+      { "original": "https://picsum.photos/seed/property-sunset-3/1600/1000", "caption": "Master bedroom" }
+    ],
+    "amenities": ["WiFi", "Air conditioning", "Pool", "Kitchen", "Washer", "Free parking", "Sea view", "Terrace"],
+    "tags": ["luxury", "sea-view", "pet-friendly"],
+    "prices": {
+      "basePrice": 320,
+      "currency": "EUR",
+      "weeklyPriceFactor": 0.92,
+      "monthlyPriceFactor": 0.78,
+      "cleaningFee": 95
+    },
+    "timezone": "Europe/Madrid",
+    "defaultCheckInTime": "16:00",
+    "defaultCheckOutTime": "11:00",
+    "terms": { "minNights": 3, "maxNights": 30 }
+  },
+  {
+    "_id": "guesty-fixture-002",
+    "title": "Courtyard Studio in the Old Town",
+    "nickname": "Old Town Studio",
+    "propertyType": "Studio",
+    "accommodates": 2,
+    "bedrooms": 0,
+    "bathrooms": 1,
+    "publicDescription": {
+      "summary": "Quiet ground-floor studio set around a private Andalusian courtyard, two minutes from the cathedral.",
+      "space": "Compact and considered: a queen bed, a small kitchenette, and a walk-in shower. Whitewashed walls and a single olive tree in the patio.",
+      "neighborhood": "Steps from Calle Granada and the tapas bars of Plaza Uncibay. The cathedral and Picasso Museum are a five-minute walk."
+    },
+    "address": {
+      "full": "Calle Granada 48, 29015 Málaga, Spain",
+      "street": "Calle Granada 48",
+      "city": "Málaga",
+      "state": "Andalucía",
+      "country": "Spain",
+      "zipcode": "29015",
+      "lat": 36.7213,
+      "lng": -4.4170
+    },
+    "pictures": [
+      { "original": "https://picsum.photos/seed/property-courtyard-1/1600/1000", "caption": "The courtyard at dusk" },
+      { "original": "https://picsum.photos/seed/property-courtyard-2/1600/1000", "caption": "Studio interior" }
+    ],
+    "amenities": ["WiFi", "Air conditioning", "Kitchen", "Patio", "Workspace"],
+    "tags": ["central", "quiet", "couples"],
+    "prices": {
+      "basePrice": 95,
+      "currency": "EUR",
+      "weeklyPriceFactor": 0.95,
+      "monthlyPriceFactor": 0.82,
+      "cleaningFee": 35
+    },
+    "timezone": "Europe/Madrid",
+    "defaultCheckInTime": "15:00",
+    "defaultCheckOutTime": "11:00",
+    "terms": { "minNights": 2, "maxNights": 60 }
+  },
+  {
+    "_id": "guesty-fixture-003",
+    "title": "Family Townhouse near La Malagueta",
+    "nickname": "Malagueta Townhouse",
+    "propertyType": "House",
+    "accommodates": 8,
+    "bedrooms": 4,
+    "bathrooms": 3,
+    "publicDescription": {
+      "summary": "A four-bedroom townhouse on a quiet street ten minutes from the city beach.",
+      "space": "Three storeys plus a roof terrace with a small plunge pool. A full kitchen, a separate dining room that seats ten, and a games corner downstairs.",
+      "neighborhood": "Residential La Malagueta — close to the beach, the port, and the historic centre but far enough from the bars to sleep well."
+    },
+    "address": {
+      "full": "Calle Maestranza 12, 29016 Málaga, Spain",
+      "street": "Calle Maestranza 12",
+      "city": "Málaga",
+      "state": "Andalucía",
+      "country": "Spain",
+      "zipcode": "29016",
+      "lat": 36.7165,
+      "lng": -4.4108
+    },
+    "pictures": [
+      { "original": "https://picsum.photos/seed/property-townhouse-1/1600/1000", "caption": "Roof terrace pool" },
+      { "original": "https://picsum.photos/seed/property-townhouse-2/1600/1000", "caption": "Dining room" },
+      { "original": "https://picsum.photos/seed/property-townhouse-3/1600/1000", "caption": "Family kitchen" },
+      { "original": "https://picsum.photos/seed/property-townhouse-4/1600/1000", "caption": "Master suite" }
+    ],
+    "amenities": ["WiFi", "Air conditioning", "Pool", "Kitchen", "Washer", "Dryer", "Free parking", "BBQ", "Family-friendly"],
+    "tags": ["family", "beach", "groups"],
+    "prices": {
+      "basePrice": 480,
+      "currency": "EUR",
+      "weeklyPriceFactor": 0.90,
+      "monthlyPriceFactor": 0.75,
+      "cleaningFee": 140
+    },
+    "timezone": "Europe/Madrid",
+    "defaultCheckInTime": "16:00",
+    "defaultCheckOutTime": "10:00",
+    "terms": { "minNights": 4, "maxNights": 28 }
+  },
+  {
+    "_id": "guesty-fixture-004",
+    "title": "Loft above the Mercado de Atarazanas",
+    "nickname": "Atarazanas Loft",
+    "propertyType": "Loft",
+    "accommodates": 4,
+    "bedrooms": 1,
+    "bathrooms": 1.5,
+    "publicDescription": {
+      "summary": "An industrial loft directly above the city's iconic 19th-century food market.",
+      "space": "Double-height ceilings, exposed brick, and original timber beams. One mezzanine bedroom plus a pull-out sofa downstairs. The kitchen is built around a six-burner gas hob — perfect for cooking what you bought downstairs.",
+      "neighborhood": "Below you, the Mercado de Atarazanas — fish, jamón, fruit, and a clutch of standing-room tapas counters. Above, the old town."
+    },
+    "address": {
+      "full": "Calle Atarazanas 8, 29005 Málaga, Spain",
+      "street": "Calle Atarazanas 8",
+      "city": "Málaga",
+      "state": "Andalucía",
+      "country": "Spain",
+      "zipcode": "29005",
+      "lat": 36.7187,
+      "lng": -4.4257
+    },
+    "pictures": [
+      { "original": "https://picsum.photos/seed/property-loft-1/1600/1000", "caption": "Living area" },
+      { "original": "https://picsum.photos/seed/property-loft-2/1600/1000", "caption": "Mezzanine bedroom" },
+      { "original": "https://picsum.photos/seed/property-loft-3/1600/1000", "caption": "Open kitchen" }
+    ],
+    "amenities": ["WiFi", "Air conditioning", "Kitchen", "Washer", "Dishwasher", "Workspace"],
+    "tags": ["central", "design", "foodies"],
+    "prices": {
+      "basePrice": 175,
+      "currency": "EUR",
+      "weeklyPriceFactor": 0.93,
+      "monthlyPriceFactor": 0.80,
+      "cleaningFee": 60
+    },
+    "timezone": "Europe/Madrid",
+    "defaultCheckInTime": "15:00",
+    "defaultCheckOutTime": "11:00",
+    "terms": { "minNights": 2, "maxNights": 45 }
+  },
+  {
+    "_id": "guesty-fixture-005",
+    "title": "Cliffside Villa in Nerja",
+    "nickname": "Nerja Villa",
+    "propertyType": "Villa",
+    "accommodates": 10,
+    "bedrooms": 5,
+    "bathrooms": 4,
+    "publicDescription": {
+      "summary": "A five-bedroom villa carved into the cliffs of Nerja, with a saltwater infinity pool overlooking the sea.",
+      "space": "Each bedroom has its own terrace. Outside: an infinity pool, a covered outdoor kitchen, and a path that drops directly down to a private cove. Sleeps ten comfortably, plus a separate annex for staff or older teens.",
+      "neighborhood": "Twenty minutes east of Málaga, Nerja sits between the Sierra de Almijara and the Mediterranean. Beaches, the Balcón de Europa, and the Cuevas de Nerja are all within easy reach."
+    },
+    "address": {
+      "full": "Camino del Pinarillo 4, 29780 Nerja, Spain",
+      "street": "Camino del Pinarillo 4",
+      "city": "Nerja",
+      "state": "Andalucía",
+      "country": "Spain",
+      "zipcode": "29780",
+      "lat": 36.7522,
+      "lng": -3.8730
+    },
+    "pictures": [
+      { "original": "https://picsum.photos/seed/property-villa-1/1600/1000", "caption": "Infinity pool" },
+      { "original": "https://picsum.photos/seed/property-villa-2/1600/1000", "caption": "Outdoor kitchen" },
+      { "original": "https://picsum.photos/seed/property-villa-3/1600/1000", "caption": "Master bedroom" },
+      { "original": "https://picsum.photos/seed/property-villa-4/1600/1000", "caption": "Path to the cove" }
+    ],
+    "amenities": ["WiFi", "Air conditioning", "Pool", "Kitchen", "Washer", "Dryer", "Free parking", "Sea view", "Terrace", "BBQ", "Hot tub"],
+    "tags": ["luxury", "sea-view", "groups", "private-pool"],
+    "prices": {
+      "basePrice": 920,
+      "currency": "EUR",
+      "weeklyPriceFactor": 0.88,
+      "monthlyPriceFactor": 0.72,
+      "cleaningFee": 220
+    },
+    "timezone": "Europe/Madrid",
+    "defaultCheckInTime": "16:00",
+    "defaultCheckOutTime": "10:00",
+    "terms": { "minNights": 5, "maxNights": 30 }
+  },
+  {
+    "_id": "guesty-fixture-006",
+    "title": "Compact City Apartment in El Soho",
+    "nickname": "Soho One-Bed",
+    "propertyType": "Apartment",
+    "accommodates": 3,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "publicDescription": {
+      "summary": "A bright one-bedroom apartment on the third floor of a 1920s building in the heart of Soho.",
+      "space": "Recently renovated with herringbone floors, a queen bedroom, and a sofa bed in the living room. The galley kitchen is small but well-equipped.",
+      "neighborhood": "Soho — the city's contemporary district. Coffee shops, galleries, and the Pompidou Centre on your doorstep."
+    },
+    "address": {
+      "full": "Calle Vendeja 14, 29001 Málaga, Spain",
+      "street": "Calle Vendeja 14",
+      "city": "Málaga",
+      "state": "Andalucía",
+      "country": "Spain",
+      "zipcode": "29001",
+      "lat": 36.7170,
+      "lng": -4.4250
+    },
+    "pictures": [
+      { "original": "https://picsum.photos/seed/property-soho-1/1600/1000", "caption": "Living room" },
+      { "original": "https://picsum.photos/seed/property-soho-2/1600/1000", "caption": "Bedroom" }
+    ],
+    "amenities": ["WiFi", "Air conditioning", "Kitchen", "Washer", "Workspace", "Elevator"],
+    "tags": ["central", "couples", "remote-work"],
+    "prices": {
+      "basePrice": 110,
+      "currency": "EUR",
+      "weeklyPriceFactor": 0.94,
+      "monthlyPriceFactor": 0.80,
+      "cleaningFee": 40
+    },
+    "timezone": "Europe/Madrid",
+    "defaultCheckInTime": "15:00",
+    "defaultCheckOutTime": "11:00",
+    "terms": { "minNights": 2, "maxNights": 60 }
+  },
+  {
+    "_id": "guesty-fixture-007",
+    "title": "Restored Finca in the Mountains",
+    "nickname": "Mountain Finca",
+    "propertyType": "House",
+    "accommodates": 6,
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "publicDescription": {
+      "summary": "A traditional Andalusian finca, restored with care, set on an olive grove forty minutes inland from Málaga.",
+      "space": "Three bedrooms across two buildings, joined by a covered porch and a long shared table. A wood-burning stove for cooler evenings, a small pool, and miles of walking from the door.",
+      "neighborhood": "The Axarquía — the hills and white villages above the coast. Cómpeta and Frigiliana are short drives; the beach is forty minutes."
+    },
+    "address": {
+      "full": "Camino Rural s/n, 29754 Cómpeta, Spain",
+      "street": "Camino Rural s/n",
+      "city": "Cómpeta",
+      "state": "Andalucía",
+      "country": "Spain",
+      "zipcode": "29754",
+      "lat": 36.8345,
+      "lng": -3.9728
+    },
+    "pictures": [
+      { "original": "https://picsum.photos/seed/property-finca-1/1600/1000", "caption": "The finca and its olive grove" },
+      { "original": "https://picsum.photos/seed/property-finca-2/1600/1000", "caption": "Covered porch" },
+      { "original": "https://picsum.photos/seed/property-finca-3/1600/1000", "caption": "The pool" }
+    ],
+    "amenities": ["WiFi", "Pool", "Kitchen", "Washer", "Free parking", "Fireplace", "Mountain view", "Garden", "Pet-friendly"],
+    "tags": ["rural", "pet-friendly", "remote", "groups"],
+    "prices": {
+      "basePrice": 240,
+      "currency": "EUR",
+      "weeklyPriceFactor": 0.90,
+      "monthlyPriceFactor": 0.74,
+      "cleaningFee": 85
+    },
+    "timezone": "Europe/Madrid",
+    "defaultCheckInTime": "16:00",
+    "defaultCheckOutTime": "11:00",
+    "terms": { "minNights": 3, "maxNights": 28 }
+  },
+  {
+    "_id": "guesty-fixture-008",
+    "title": "Beachfront Apartment in Pedregalejo",
+    "nickname": "Pedregalejo Beach",
+    "propertyType": "Apartment",
+    "accommodates": 4,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "publicDescription": {
+      "summary": "A two-bedroom apartment on the seafront promenade of Pedregalejo, with a balcony directly overlooking the Mediterranean.",
+      "space": "Two bedrooms (one king, one twin), two bathrooms, an open living-dining space, and a balcony that catches the morning sun. The kitchen is fully equipped for longer stays.",
+      "neighborhood": "Pedregalejo — Málaga's old fishing district, now a string of palm trees, espeto restaurants, and easy beaches. The historic centre is a fifteen-minute taxi."
+    },
+    "address": {
+      "full": "Paseo Marítimo Pedregalejo 102, 29017 Málaga, Spain",
+      "street": "Paseo Marítimo Pedregalejo 102",
+      "city": "Málaga",
+      "state": "Andalucía",
+      "country": "Spain",
+      "zipcode": "29017",
+      "lat": 36.7185,
+      "lng": -4.3801
+    },
+    "pictures": [
+      { "original": "https://picsum.photos/seed/property-beach-1/1600/1000", "caption": "Balcony view" },
+      { "original": "https://picsum.photos/seed/property-beach-2/1600/1000", "caption": "Living room" },
+      { "original": "https://picsum.photos/seed/property-beach-3/1600/1000", "caption": "Master bedroom" }
+    ],
+    "amenities": ["WiFi", "Air conditioning", "Kitchen", "Washer", "Sea view", "Balcony", "Elevator"],
+    "tags": ["beach", "family", "sea-view"],
+    "prices": {
+      "basePrice": 195,
+      "currency": "EUR",
+      "weeklyPriceFactor": 0.93,
+      "monthlyPriceFactor": 0.78,
+      "cleaningFee": 70
+    },
+    "timezone": "Europe/Madrid",
+    "defaultCheckInTime": "16:00",
+    "defaultCheckOutTime": "10:00",
+    "terms": { "minNights": 3, "maxNights": 60 }
+  }
+]

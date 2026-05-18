@@ -16,9 +16,16 @@ interface Props {
   category?: Category | null;
   /** Base path used to build category filter URL (e.g. "travel-guide") */
   basePath: string;
+  /**
+   * Layout variant. Below lg: every variant renders as the default vertical card.
+   * - "default"      vertical card (image on top)
+   * - "lg-featured"  vertical card with larger title + more description lines at lg:
+   * - "lg-compact"   horizontal card (image left, content right) at lg:
+   */
+  variant?: "default" | "lg-featured" | "lg-compact";
 }
 
-const { title, href, description, publishedAt, featuredImage, category, basePath } = Astro.props;
+const { title, href, description, publishedAt, featuredImage, category, basePath, variant = "default" } = Astro.props;
 
 const dateLabel = publishedAt
   ? new Date(publishedAt).toLocaleDateString("en-GB", {
@@ -29,12 +36,15 @@ const dateLabel = publishedAt
   : null;
 ---
 
-<div class="flex flex-col group h-full text-left">
+<div class:list={["flex flex-col group h-full text-left", variant === "lg-compact" && "lg:flex-row lg:gap-6"]}>
 
   <!-- Image -->
   <a href={href}
-    class="relative block w-full mb-5 overflow-hidden rounded-md bg-sand-alt shadow-sm"
-    style="padding-bottom: 75%;">
+    class:list={[
+      "relative block w-full aspect-[4/3] mb-5 overflow-hidden rounded-md bg-sand-alt shadow-sm",
+      variant === "lg-featured" && "lg:aspect-[16/9]",
+      variant === "lg-compact" && "lg:w-2/5 lg:shrink-0 lg:mb-0 lg:aspect-auto lg:self-stretch",
+    ]}>
 
     {featuredImage?.url ? (
       <StrapiImage
@@ -52,26 +62,31 @@ const dateLabel = publishedAt
     )}
   </a>
 
-  <!-- Category pill -->
-  {category && (
-    <div class="flex flex-wrap gap-2 mb-3">
-      <a
-        href={`/${basePath}/category/${category.slug}`}
-        class="bg-beige text-dark-blue text-body-xs uppercase px-3 py-1 rounded-full font-bold"
-      >
-        {category.title}
-      </a>
-    </div>
-  )}
-
   <!-- Body -->
   <div class="flex flex-col flex-1">
-    <h2 class="font-heading font-bold text-h5 text-secondary group-hover:text-primary-600 transition-colors duration-300 leading-tight mb-3">
+    {category && (
+      <div class="flex flex-wrap gap-2 mb-3">
+        <a
+          href={`/${basePath}/category/${category.slug}`}
+          class="bg-beige text-dark-blue text-body-xs uppercase px-3 py-1 rounded-full font-bold"
+        >
+          {category.title}
+        </a>
+      </div>
+    )}
+
+    <h2 class:list={[
+      "font-heading font-bold text-h5 text-secondary group-hover:text-primary-600 transition-colors duration-300 leading-tight mb-3",
+      variant === "lg-featured" && "lg:text-h3",
+    ]}>
       <a href={href}>{title}</a>
     </h2>
 
     {description && (
-      <p class="line-clamp-3 mb-4 leading-relaxed text-muted">
+      <p class:list={[
+        "line-clamp-3 mb-4 leading-relaxed text-muted",
+        variant === "lg-featured" && "lg:line-clamp-4",
+      ]}>
         {description}
       </p>
     )}

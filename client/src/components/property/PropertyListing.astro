@@ -1,0 +1,86 @@
+---
+import PropertyCard from "./PropertyCard.astro";
+import PropertySearchBar from "./PropertySearchBar.astro";
+import PropertyFilters from "./PropertyFilters.astro";
+import PropertySortToolbar from "./PropertySortToolbar.astro";
+import { buildFilterOptions, type PropertyForFilters } from "../../utils/property/filter-options";
+
+interface PropertyData extends PropertyForFilters {
+  slug: string;
+  title: string;
+  bedrooms?: number | null;
+  bathrooms?: number | null;
+  images?: { url: string; alternativeText?: string | null }[] | null;
+}
+
+interface Props {
+  basePath: string;
+  properties: PropertyData[];
+}
+
+const { basePath, properties } = Astro.props;
+const options = buildFilterOptions(properties);
+---
+
+<PropertySearchBar
+  cities={options.cities}
+  types={options.types.map((t) => t.value)}
+  maxGuests={options.maxGuests}
+/>
+
+<section class="bg-surface">
+  <div class="container py-8">
+    <div class="flex flex-col lg:flex-row gap-8">
+
+      <PropertyFilters
+        types={options.types}
+        categories={options.categories}
+        features={options.features}
+        minPrice={options.minPrice}
+        maxPrice={options.maxPrice}
+        currencySymbol={options.currencySymbol}
+      />
+
+      <div class="flex-1 min-w-0">
+        <PropertySortToolbar initialCount={properties.length} />
+
+        {properties.length === 0 ? (
+          <p class="text-center text-muted py-20">
+            No properties yet. Once the Guesty sync runs, your listings will appear here.
+          </p>
+        ) : (
+          <>
+            <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3" data-property-grid>
+              {properties.map((p) => (
+                <PropertyCard
+                  href={`/${basePath}/${p.slug}`}
+                  title={p.title}
+                  propertyType={p.propertyType}
+                  bedrooms={p.bedrooms}
+                  bathrooms={p.bathrooms}
+                  accommodates={p.accommodates}
+                  address={p.address}
+                  pricing={p.pricing as any}
+                  amenities={p.amenities as any}
+                  images={p.images}
+                  tags={p.tags}
+                />
+              ))}
+            </div>
+
+            <p class="mt-10 text-center text-muted" data-property-empty hidden>
+              No properties match those filters. Try widening your range or
+              <button type="button" data-filter-reset class="text-primary-600 hover:underline font-semibold ml-1">reset all filters</button>.
+            </p>
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initPropertyFilters, initPropertySearchBar } from "../../scripts/property/filters";
+  initPropertySearchBar();
+  initPropertyFilters();
+</script>

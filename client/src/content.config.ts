@@ -704,6 +704,115 @@ const strapiInvestorGuides = defineCollection({
   schema: guideCollectionSchema,
 });
 
+// ── Property collection ───────────────────────────────────────────────────────
+// Synced from Guesty PMS. The collection is i18n-enabled (locale: "all") so
+// translations layer on top of the English entries the sync produces.
+
+const propertyAmenitySchema = z.object({
+  id: z.number().optional(),
+  name: z.string(),
+  icon: z.string().nullable().optional(),
+});
+
+const propertyAddressSchema = z
+  .object({
+    id: z.number().optional(),
+    full: z.string().nullable().optional(),
+    street: z.string().nullable().optional(),
+    city: z.string().nullable().optional(),
+    state: z.string().nullable().optional(),
+    country: z.string().nullable().optional(),
+    zipcode: z.string().nullable().optional(),
+    lat: z.number().nullable().optional(),
+    lng: z.number().nullable().optional(),
+  })
+  .nullable()
+  .optional();
+
+const propertyPricingSchema = z
+  .object({
+    id: z.number().optional(),
+    basePrice: z.number(),
+    currency: z.string(),
+    weeklyDiscount: z.number().nullable().optional(),
+    monthlyDiscount: z.number().nullable().optional(),
+    cleaningFee: z.number().nullable().optional(),
+  })
+  .nullable()
+  .optional();
+
+const strapiProperties = defineCollection({
+  loader: strapiLoader({
+    contentType: "property",
+    // strapi-community-astro-loader's default pluralization produces
+    // "propertys" — wrong. Pass the explicit plural matching Strapi's
+    // pluralName from the property schema.
+    pluralContentType: "properties",
+    clientConfig,
+    params: {
+      // NOTE: `locale: "all"` only works with an authenticated request
+      // (Strapi v5 returns an empty array on the public REST API). The
+      // strapi-community-astro-loader uses an unauthenticated client by
+      // default. v1 is English-only, so we omit the locale param and let
+      // Strapi default to the configured `defaultLocale` ("en").
+      //
+      // When a second locale lands, EITHER pass an API token via
+      // clientConfig.headers, OR define one collection per locale here
+      // (strapiPropertiesEn, strapiPropertiesEs, …). The detail route's
+      // getStaticPaths already filters by `data.locale` so the data side
+      // doesn't need to change.
+      fields: [
+        "guestyId",
+        "title",
+        "slug",
+        "locale",
+        "propertyType",
+        "accommodates",
+        "bedrooms",
+        "bathrooms",
+        "summary",
+        "description",
+        "minNights",
+        "maxNights",
+        "checkInTime",
+        "checkOutTime",
+        "timezone",
+        "tags",
+        "lastSyncedAt",
+      ],
+      populate: {
+        address: true,
+        pricing: true,
+        amenities: { fields: ["name", "icon"] },
+        images: { fields: ["url", "alternativeText", "width", "height"] },
+      },
+    },
+  }),
+  schema: z.object({
+    guestyId: z.string(),
+    title: z.string(),
+    slug: z.string(),
+    locale: z.string().optional(),
+    propertyType: z.string().nullable().optional(),
+    accommodates: z.number().nullable().optional(),
+    bedrooms: z.number().nullable().optional(),
+    bathrooms: z.number().nullable().optional(),
+    summary: z.string().nullable().optional(),
+    description: z.string().nullable().optional(),
+    minNights: z.number().nullable().optional(),
+    maxNights: z.number().nullable().optional(),
+    checkInTime: z.string().nullable().optional(),
+    checkOutTime: z.string().nullable().optional(),
+    timezone: z.string().nullable().optional(),
+    tags: z.array(z.string()).nullable().optional(),
+    lastSyncedAt: z.string().nullable().optional(),
+    address: propertyAddressSchema,
+    pricing: propertyPricingSchema,
+    amenities: z.array(propertyAmenitySchema).nullable().optional(),
+    images: z.array(imageSchema).nullable().optional(),
+  }),
+});
+
 const strapiTravelGuideCategories = defineCollection({
   loader: strapiLoader({
     contentType: "travel-guide-category",
@@ -750,4 +859,5 @@ export const collections = {
   strapiInvestorGuides,
   strapiTravelGuideCategories,
   strapiInvestorGuideCategories,
+  strapiProperties,
 };

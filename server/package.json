@@ -15,7 +15,8 @@
     "seed:product": "node scripts/seed-product.js",
     "seed:guides": "node scripts/seed-guides.js",
     "seed:faqs": "node scripts/seed-faqs.js",
-    "seed:support": "node scripts/seed-support.js"
+    "seed:support": "node scripts/seed-support.js",
+    "seed:properties": "npx tsx scripts/seed-properties.ts"
   },
   "dependencies": {
     "@strapi/plugin-cloud": "5.41.1",

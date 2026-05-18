@@ -904,6 +904,86 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiPropertyProperty extends Struct.CollectionTypeSchema {
+  collectionName: 'properties';
+  info: {
+    description: 'Vacation rental property synced from Guesty PMS.';
+    displayName: 'Property';
+    pluralName: 'properties';
+    singularName: 'property';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    accommodates: Schema.Attribute.Integer;
+    address: Schema.Attribute.Component<'property.address', false>;
+    amenities: Schema.Attribute.Component<'property.amenity', true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    bathrooms: Schema.Attribute.Decimal;
+    bedrooms: Schema.Attribute.Integer;
+    checkInTime: Schema.Attribute.String;
+    checkOutTime: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    guestyId: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    images: Schema.Attribute.Media<'images', true>;
+    lastSyncedAt: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::property.property'
+    >;
+    maxNights: Schema.Attribute.Integer;
+    minNights: Schema.Attribute.Integer;
+    pricing: Schema.Attribute.Component<'property.pricing', false>;
+    propertyType: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'title'> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    summary: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    tags: Schema.Attribute.JSON;
+    timezone: Schema.Attribute.String;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiSeoConfigSeoConfig extends Struct.SingleTypeSchema {
   collectionName: 'seo_config';
   info: {
@@ -943,6 +1023,13 @@ export interface ApiSeoConfigSeoConfig extends Struct.SingleTypeSchema {
       'oneToMany',
       'api::seo-config.seo-config'
     >;
+    propertiesBasePath: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<'properties'>;
     publishedAt: Schema.Attribute.DateTime;
     travelGuidesBasePath: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
@@ -1691,6 +1778,7 @@ declare module '@strapi/strapi' {
       'api::landing-page.landing-page': ApiLandingPageLandingPage;
       'api::page.page': ApiPagePage;
       'api::product.product': ApiProductProduct;
+      'api::property.property': ApiPropertyProperty;
       'api::seo-config.seo-config': ApiSeoConfigSeoConfig;
       'api::tag.tag': ApiTagTag;
       'api::testimonial.testimonial': ApiTestimonialTestimonial;

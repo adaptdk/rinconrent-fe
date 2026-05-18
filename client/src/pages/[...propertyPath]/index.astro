@@ -1,0 +1,89 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PropertyListing from "../../components/property/PropertyListing.astro";
+import PropertyDetail from "../../components/property/PropertyDetail.astro";
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import { getSeoConfig } from "../../utils/loaders";
+
+type Item = CollectionEntry<"strapiProperties">;
+
+type ListingProps = {
+  mode: "listing";
+  locale: string;
+  basePath: string;
+  properties: Item[];
+};
+
+type DetailProps = {
+  mode: "detail";
+  locale: string;
+  basePath: string;
+  property: Item;
+  locationLabel: string;
+};
+
+export async function getStaticPaths() {
+  // NOTE: getStaticPaths runs in an isolated scope — locale set is declared
+  // inside, not at module scope, because Astro can't see module-level consts
+  // here. To add a locale: append to SUPPORTED_LOCALES and make sure entries
+  // exist in Strapi for that locale.
+  const SUPPORTED_LOCALES = ["en"] as const;
+  const DEFAULT_LOCALE = "en";
+
+  const all = await getCollection("strapiProperties");
+  const paths: Array<{
+    params: { propertyPath: string };
+    props: ListingProps | DetailProps;
+  }> = [];
+
+  for (const locale of SUPPORTED_LOCALES) {
+    const seo = await getSeoConfig(locale);
+    const basePath = seo.propertiesBasePath ?? "properties";
+    const localeProperties = all.filter(
+      (p) => (p.data.locale ?? DEFAULT_LOCALE) === locale
+    );
+
+    paths.push({
+      params: { propertyPath: basePath },
+      props: { mode: "listing", locale, basePath, properties: localeProperties },
+    });
+
+    for (const property of localeProperties) {
+      const a = property.data.address;
+      const locationLabel = [a?.city, a?.state ?? a?.country].filter(Boolean).join(", ");
+      paths.push({
+        params: { propertyPath: `${basePath}/${property.data.slug}` },
+        props: { mode: "detail", locale, basePath, property, locationLabel },
+      });
+    }
+  }
+
+  return paths;
+}
+
+const props = Astro.props as ListingProps | DetailProps;
+
+const pageTitle = props.mode === "detail" ? props.property.data.title : "Properties";
+const pageDescription =
+  props.mode === "detail"
+    ? props.property.data.summary ?? undefined
+    : "Browse our curated collection of vacation rentals.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  {props.mode === "listing" && (
+    <PropertyListing
+      basePath={props.basePath}
+      properties={props.properties.map((p) => p.data)}
+    />
+  )}
+
+  {props.mode === "detail" && (
+    <PropertyDetail
+      property={props.property.data}
+      locationLabel={props.locationLabel}
+      basePath={props.basePath}
+    />
+  )}
+</BaseLayout>

@@ -91,6 +91,19 @@ client/src/styles/
 - The `uploadImage` function uses `filepath`, `originalFilename`, `mimetype` (not `path`, `name`, `type`)
 - Run `yarn clean` in `server/` after deleting content types to clear stale dist files
 
+### Strapi v5 gotchas (do not skip)
+
+**1. Never PUT a single type (`/api/global`, `/api/seo-config`, etc.) over REST to modify one nested field.** Strapi v5's REST PUT on a single type replaces nested components wholesale — sending `{ data: { header: { navItems: [...] } } }` will wipe `logo`, `topNav`, `ctaGroup`, and any other field not included. Strapi History does not exist on the Community Edition, so the data is unrecoverable.
+
+  - To mutate a single type from a script, use the **Document Service** inside a `compileStrapi`/`createStrapi` boot (which handles component merging), or perform the change in the admin UI.
+  - For one-line changes like adding a nav item, prefer the admin UI and document it as a manual setup step. No seed script in this repo touches `/api/global` — keep it that way.
+
+**2. `?locale=all` requires authentication.** The public REST API silently returns an empty array when `locale=all` is requested without an admin/API token. The strapi-community-astro-loader is unauthenticated by default, so do not set `locale: "all"` in `content.config.ts` unless you also pass a token via `clientConfig.headers`. When only one locale is configured, omit the locale param and Strapi defaults to `defaultLocale`.
+
+**3. REST POST creates drafts, even with `publishedAt` set.** In Strapi v5, `POST /api/<type>` creates a draft regardless of any `publishedAt` value in the data payload. To create as published over REST, follow the POST with `PUT /api/<type>/:documentId?status=published` (an empty `{ data: {} }` body is fine — Strapi treats it as a no-op update plus publish). There is **no** exposed `/actions/publish` endpoint on the public REST API.
+
+**4. Content layer cache.** After Strapi data changes, the Astro content collections won't auto-refresh — clear `client/.astro/data-store.json` (the project-level cache file the loader writes when it runs) and restart `astro dev`. Changes to `client/src/content.config.ts` also require a dev-server restart; hot reload picks up content config changes inconsistently.
+
 ### Two populate configs — keep both in sync
 
 There are **two independent populate configs** for blocks. When adding or renaming fields on any block, update both:
@@ -125,3 +138,7 @@ This only affects content collections. Pages using `loaders.ts` always fetch fre
 
 - `/add-page` — scaffolds a new page (Strapi content type + seed script + Astro collection + pages). See `.claude/skills/add-page/` for details.
 - Reference files: `design-patterns.md` (UI guidance) and `populate-best-practices.md` (data loading)
+
+## Integrations
+
+- **Guesty PMS** — vacation rental properties are synced from Guesty into the `property` content type and rendered at `/<propertiesBasePath>`. Bookings hand off to Guesty via a configurable redirect URL. Architecture, data model, sync lifecycle, i18n model, and operational runbook: [`server/docs/guesty-integration.md`](server/docs/guesty-integration.md) (backend) and [`client/docs/properties.md`](client/docs/properties.md) (frontend).

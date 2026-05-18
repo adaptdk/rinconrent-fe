@@ -1,0 +1,188 @@
+---
+import StrapiImage from "../StrapiImage.astro";
+import { currencySymbol } from "../../utils/property/currency";
+import { buildBookingUrl } from "../../utils/property/booking-url";
+
+interface Amenity { name: string; icon?: string | null }
+interface Image { url: string; alternativeText?: string | null }
+interface Pricing { basePrice: number; currency: string; cleaningFee?: number | null }
+
+interface PropertyData {
+  guestyId: string;
+  title: string;
+  propertyType?: string | null;
+  bedrooms?: number | null;
+  bathrooms?: number | null;
+  accommodates?: number | null;
+  summary?: string | null;
+  description?: string | null;
+  minNights?: number | null;
+  maxNights?: number | null;
+  checkInTime?: string | null;
+  checkOutTime?: string | null;
+  amenities?: Amenity[] | null;
+  images?: Image[] | null;
+  pricing?: Pricing | null;
+}
+
+interface Props {
+  property: PropertyData;
+  locationLabel: string;
+  basePath: string;
+}
+
+const { property, locationLabel, basePath } = Astro.props;
+const p = property;
+
+const hero = p.images && p.images.length > 0 ? p.images[0] : null;
+const gallery = p.images ? p.images.slice(1) : [];
+const sym = currencySymbol(p.pricing?.currency);
+const priceLabel = p.pricing ? `${sym}${Math.round(p.pricing.basePrice)}` : null;
+const cleaningLabel = p.pricing?.cleaningFee != null ? `${sym}${Math.round(p.pricing.cleaningFee)}` : null;
+
+const bookingBaseUrl = import.meta.env.PUBLIC_GUESTY_BOOKING_URL ?? "";
+const bookingHref = buildBookingUrl(bookingBaseUrl, p.guestyId);
+---
+
+<article class="container py-12">
+  <a
+    href={`/${basePath}`}
+    class="inline-flex items-center gap-1 text-sm text-muted hover:text-primary-600 transition"
+  >
+    ← Back to properties
+  </a>
+
+  <div class="mt-6 grid gap-3 sm:grid-cols-3 sm:grid-rows-2 sm:h-[420px]">
+    {hero ? (
+      <div class="sm:col-span-2 sm:row-span-2 overflow-hidden rounded-xl">
+        <StrapiImage src={hero.url} alt={hero.alternativeText || p.title} width={1600} height={1000}
+          class="w-full h-full object-cover" />
+      </div>
+    ) : (
+      <div class="sm:col-span-2 sm:row-span-2 bg-surface-alt rounded-xl flex items-center justify-center">
+        <i class="fa-solid fa-camera fa-3x text-faint" aria-hidden="true"></i>
+      </div>
+    )}
+    {gallery.slice(0, 4).map((img) => (
+      <div class="overflow-hidden rounded-xl hidden sm:block">
+        <StrapiImage src={img.url} alt={img.alternativeText || p.title} width={800} height={600}
+          class="w-full h-full object-cover" />
+      </div>
+    ))}
+  </div>
+
+  <div class="mt-10 grid gap-12 lg:grid-cols-3">
+
+    <div class="lg:col-span-2">
+      {locationLabel && (
+        <p class="text-xs uppercase tracking-widest text-primary-600 font-semibold">{locationLabel}</p>
+      )}
+      <h1 class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-secondary font-heading">{p.title}</h1>
+
+      <div class="mt-6 flex flex-wrap gap-x-8 gap-y-3 text-sm text-secondary border-y border-border py-5">
+        {p.propertyType && (
+          <span><i class="fa-solid fa-house mr-2 text-primary-600" aria-hidden="true"></i>{p.propertyType}</span>
+        )}
+        {p.accommodates != null && (
+          <span><i class="fa-solid fa-user-group mr-2 text-primary-600" aria-hidden="true"></i>Sleeps {p.accommodates}</span>
+        )}
+        {p.bedrooms != null && (
+          <span><i class="fa-solid fa-bed mr-2 text-primary-600" aria-hidden="true"></i>{p.bedrooms} bedroom{p.bedrooms === 1 ? "" : "s"}</span>
+        )}
+        {p.bathrooms != null && (
+          <span><i class="fa-solid fa-bath mr-2 text-primary-600" aria-hidden="true"></i>{p.bathrooms} bathroom{p.bathrooms === 1 ? "" : "s"}</span>
+        )}
+      </div>
+
+      {p.summary && <p class="mt-6 text-lg text-muted leading-relaxed">{p.summary}</p>}
+      {p.description && (
+        <div class="mt-6 prose prose-neutral max-w-none text-muted leading-relaxed whitespace-pre-line" set:html={p.description} />
+      )}
+
+      {p.amenities && p.amenities.length > 0 && (
+        <section class="mt-12">
+          <h2 class="text-xl font-bold text-secondary font-heading">Amenities</h2>
+          <ul class="mt-5 grid gap-3 sm:grid-cols-2">
+            {p.amenities.map((a) => (
+              <li class="flex items-center gap-3 text-sm text-secondary">
+                <i class={`fa-solid ${a.icon ?? "fa-circle-check"} text-primary-600 w-5 text-center`} aria-hidden="true"></i>
+                {a.name}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {(p.checkInTime || p.checkOutTime || p.minNights != null || p.maxNights != null) && (
+        <section class="mt-12">
+          <h2 class="text-xl font-bold text-secondary font-heading">Good to know</h2>
+          <dl class="mt-5 grid gap-4 sm:grid-cols-2 text-sm">
+            {p.checkInTime && (
+              <div><dt class="text-faint">Check-in</dt><dd class="text-secondary font-medium">From {p.checkInTime}</dd></div>
+            )}
+            {p.checkOutTime && (
+              <div><dt class="text-faint">Check-out</dt><dd class="text-secondary font-medium">By {p.checkOutTime}</dd></div>
+            )}
+            {p.minNights != null && (
+              <div><dt class="text-faint">Minimum stay</dt><dd class="text-secondary font-medium">{p.minNights} night{p.minNights === 1 ? "" : "s"}</dd></div>
+            )}
+            {p.maxNights != null && (
+              <div><dt class="text-faint">Maximum stay</dt><dd class="text-secondary font-medium">{p.maxNights} nights</dd></div>
+            )}
+          </dl>
+        </section>
+      )}
+    </div>
+
+    <aside class="lg:col-span-1">
+      <div class="sticky top-6 rounded-xl border border-border bg-surface-raised p-6 shadow-sm">
+        {priceLabel && (
+          <p class="text-2xl font-bold text-secondary">
+            {priceLabel}<span class="ml-1 text-sm font-normal text-faint">/ night</span>
+          </p>
+        )}
+        {cleaningLabel && (
+          <p class="mt-1 text-xs text-faint">+ {cleaningLabel} cleaning fee</p>
+        )}
+
+        <form class="mt-5 space-y-3" data-booking-form data-booking-base={bookingHref ?? ""}>
+          <label class="flex flex-col gap-1 text-xs uppercase tracking-wide text-faint font-semibold">
+            Check in
+            <input type="date" name="checkIn"
+              class="rounded-md border border-border bg-surface px-3 py-2 text-sm text-secondary focus:outline-none focus:ring-2 focus:ring-primary-600" />
+          </label>
+          <label class="flex flex-col gap-1 text-xs uppercase tracking-wide text-faint font-semibold">
+            Check out
+            <input type="date" name="checkOut"
+              class="rounded-md border border-border bg-surface px-3 py-2 text-sm text-secondary focus:outline-none focus:ring-2 focus:ring-primary-600" />
+          </label>
+          <label class="flex flex-col gap-1 text-xs uppercase tracking-wide text-faint font-semibold">
+            Guests
+            <input type="number" name="guests" min="1" max={p.accommodates ?? 16} value="2"
+              class="rounded-md border border-border bg-surface px-3 py-2 text-sm text-secondary focus:outline-none focus:ring-2 focus:ring-primary-600" />
+          </label>
+
+          {bookingHref ? (
+            <button type="submit"
+              class="mt-2 w-full rounded-md bg-primary-600 px-4 py-3 text-sm font-semibold text-white hover:bg-primary-700 transition">
+              Book on Guesty →
+            </button>
+          ) : (
+            <button type="button" disabled
+              title="Set PUBLIC_GUESTY_BOOKING_URL in client/.env to enable booking"
+              class="mt-2 w-full rounded-md bg-surface-alt px-4 py-3 text-sm font-semibold text-faint cursor-not-allowed">
+              Booking not configured
+            </button>
+          )}
+
+          <p class="text-xs text-faint text-center">Availability is confirmed on Guesty before payment.</p>
+        </form>
+      </div>
+    </aside>
+  </div>
+</article>
+
+<script>
+  import { initBookingForms } from "../../scripts/property/booking";
+  initBookingForms();
+</script>

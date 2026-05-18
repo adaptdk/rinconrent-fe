@@ -20,6 +20,9 @@ const PUBLIC_ACTIONS = [
   // Investor guides
   'api::investor-guide.investor-guide.find',
   'api::investor-guide.investor-guide.findOne',
+  // Properties (synced from Guesty)
+  'api::property.property.find',
+  'api::property.property.findOne',
 ];
 
 export default {

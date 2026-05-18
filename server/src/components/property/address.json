@@ -1,0 +1,34 @@
+{
+  "collectionName": "components_property_addresses",
+  "info": {
+    "displayName": "Address",
+    "description": "Physical address with coordinates. Not localized."
+  },
+  "options": {},
+  "attributes": {
+    "full": {
+      "type": "string"
+    },
+    "street": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "zipcode": {
+      "type": "string"
+    },
+    "lat": {
+      "type": "decimal"
+    },
+    "lng": {
+      "type": "decimal"
+    }
+  }
+}

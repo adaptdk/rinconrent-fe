@@ -355,6 +355,59 @@ export interface LayoutSupport extends Struct.ComponentSchema {
   };
 }
 
+export interface PropertyAddress extends Struct.ComponentSchema {
+  collectionName: 'components_property_addresses';
+  info: {
+    description: 'Physical address with coordinates. Not localized.';
+    displayName: 'Address';
+  };
+  attributes: {
+    city: Schema.Attribute.String;
+    country: Schema.Attribute.String;
+    full: Schema.Attribute.String;
+    lat: Schema.Attribute.Decimal;
+    lng: Schema.Attribute.Decimal;
+    state: Schema.Attribute.String;
+    street: Schema.Attribute.String;
+    zipcode: Schema.Attribute.String;
+  };
+}
+
+export interface PropertyAmenity extends Struct.ComponentSchema {
+  collectionName: 'components_property_amenities';
+  info: {
+    description: 'A single property amenity (name is localized, icon is not).';
+    displayName: 'Amenity';
+  };
+  attributes: {
+    icon: Schema.Attribute.String;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+  };
+}
+
+export interface PropertyPricing extends Struct.ComponentSchema {
+  collectionName: 'components_property_pricings';
+  info: {
+    description: 'Base price, currency, and optional discount/fee fields. Not localized.';
+    displayName: 'Pricing';
+  };
+  attributes: {
+    basePrice: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    cleaningFee: Schema.Attribute.Decimal;
+    currency: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'USD'>;
+    monthlyDiscount: Schema.Attribute.Decimal;
+    weeklyDiscount: Schema.Attribute.Decimal;
+  };
+}
+
 export interface SharedCard extends Struct.ComponentSchema {
   collectionName: 'components_shared_cards';
   info: {
@@ -491,6 +544,9 @@ declare module '@strapi/strapi' {
       'layout.page-header': LayoutPageHeader;
       'layout.partners': LayoutPartners;
       'layout.support': LayoutSupport;
+      'property.address': PropertyAddress;
+      'property.amenity': PropertyAmenity;
+      'property.pricing': PropertyPricing;
       'shared.card': SharedCard;
       'shared.community-link': SharedCommunityLink;
       'shared.footer-menu': SharedFooterMenu;

@@ -68,7 +68,7 @@ if (showPosts === "selected") {
 ---
 
 <section>
-  <div class="mx-auto container px-6 py-16">
+  <div class="container py-16">
     {(title || subtitle) && (
       <div class="mb-10 text-center">
         {title && (
@@ -83,19 +83,14 @@ if (showPosts === "selected") {
     )}
 
     {guides.length > 0 && (
-      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {guides.map((guide) => (
-          <GuideCard
-            title={guide.title}
-            slug={guide.slug}
-            href={guide.href}
-            description={guide.description}
-            publishedAt={guide.publishedAt}
-            featuredImage={guide.featuredImage}
-            category={guide.category}
-            basePath={guide.basePath}
-          />
-        ))}
+      <div class="grid gap-8 lg:grid-cols-2 lg:gap-10">
+        {guides[0] && <GuideCard {...guides[0]} variant="lg-featured" />}
+        {(guides[1] || guides[2]) && (
+          <div class="grid gap-8 lg:flex lg:flex-col">
+            {guides[1] && <GuideCard {...guides[1]} variant="lg-compact" />}
+            {guides[2] && <GuideCard {...guides[2]} variant="lg-compact" />}
+          </div>
+        )}
       </div>
     )}
 

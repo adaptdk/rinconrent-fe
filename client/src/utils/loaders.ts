@@ -304,16 +304,23 @@ async function getSeoConfig(locale = "en"): Promise<{
   destinationsBasePath?: string;
   travelGuidesBasePath?: string;
   investorGuidesBasePath?: string;
+  propertiesBasePath?: string;
 }> {
   try {
     const data = await strapiClient.single("seo-config").find({
       locale,
-      fields: ["destinationsBasePath", "travelGuidesBasePath", "investorGuidesBasePath"],
+      fields: [
+        "destinationsBasePath",
+        "travelGuidesBasePath",
+        "investorGuidesBasePath",
+        "propertiesBasePath",
+      ],
     } as any);
     return (data?.data ?? {}) as {
       destinationsBasePath?: string;
       travelGuidesBasePath?: string;
       investorGuidesBasePath?: string;
+      propertiesBasePath?: string;
     };
   } catch {
     // No entry created yet — use schema defaults.

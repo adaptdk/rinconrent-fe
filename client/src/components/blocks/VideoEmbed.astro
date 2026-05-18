@@ -31,8 +31,8 @@ const embedUrl = isYoutube && youtubeUrl ? getYouTubeEmbedUrl(youtubeUrl) : null
 const videoSrc = !isYoutube && videoFile?.url ? getStrapiUrl(videoFile.url) : null;
 ---
 
-<section class="block-video py-16 px-6">
-  <div class={`block-video__inner mx-auto max-w-7xl ${twoColumns ? "flex flex-col md:flex-row items-start gap-12" : ""}`}>
+<section class="block-video py-16">
+  <div class={`block-video__inner container ${twoColumns ? "flex flex-col md:flex-row items-start gap-12" : ""}`}>
 
     {hasContent && (
       <div class={`block-video__header ${twoColumns ? "md:w-1/2 flex-shrink-0" : "mb-10 max-w-2xl md:mx-auto md:text-center"}`}>
@@ -50,7 +50,7 @@ const videoSrc = !isYoutube && videoFile?.url ? getStrapiUrl(videoFile.url) : nu
     )}
 
     <div
-      class={`block-video__media w-full ${twoColumns ? "md:w-1/2" : "mx-auto max-w-6xl"}`}
+      class={`block-video__media w-full ${twoColumns ? "md:w-1/2" : "container"}`}
       data-block-video
     >
       {isYoutube && embedUrl && (

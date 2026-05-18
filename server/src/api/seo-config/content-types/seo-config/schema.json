@@ -36,6 +36,13 @@
       "pluginOptions": {
         "i18n": { "localized": true }
       }
+    },
+    "propertiesBasePath": {
+      "type": "string",
+      "default": "properties",
+      "pluginOptions": {
+        "i18n": { "localized": true }
+      }
     }
   }
 }
